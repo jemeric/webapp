@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "outDir": "./wwwroot/dist/",
+        "noImplicitAny": true,
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "noEmitOnError": true,
+        "removeComments": false,
+        "sourceMap": true,
+        "target": "es5",
+        "jsx": "react"
+    },
+    "exclude": [
+        "node_modules",
+        "wwwroot"
+    ]
+}
