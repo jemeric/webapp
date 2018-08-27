@@ -26,7 +26,7 @@ var Hello = /** @class */ (function (_super) {
             this.props.compiler,
             " and ",
             this.props.framework,
-            "!");
+            "!!");
     };
     return Hello;
 }(React.Component));
