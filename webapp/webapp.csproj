@@ -6,13 +6,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\boot-client.tsx" />
     <None Remove="ClientApp\boot-server.tsx" />
     <None Remove="ClientApp\components\Hello.tsx" />
     <None Remove="ClientApp\index.tsx" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="ClientApp\dist\" />
     <Folder Include="wwwroot\" />
+    <Folder Include="wwwroot\dist\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\boot-client.tsx" />
     <TypeScriptCompile Include="ClientApp\boot-server.tsx" />
     <TypeScriptCompile Include="ClientApp\components\Hello.tsx" />
     <TypeScriptCompile Include="ClientApp\index.tsx" />
