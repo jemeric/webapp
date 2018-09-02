@@ -16,13 +16,16 @@
     "awesome-typescript-loader": "^5.2.0",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
+    "react-hot-loader": "4.3.5",
     "source-map-loader": "^0.2.4",
     "typescript": "^3.0.1",
     "webpack": "^4.16.5",
     "webpack-cli": "^3.1.0",
     "webpack-merge": "4.1.4",
     "webpack-dev-middleware": "3.2.0",
+    "webpack-hot-middleware": "2.23.0",
     "aspnet-prerendering": "^3.0.1",
-    "aspnet-webpack": "3.0.0"
+    "aspnet-webpack": "3.0.0",
+    "aspnet-webpack-react": "3.0.0"
   }
 }

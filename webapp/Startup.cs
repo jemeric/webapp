@@ -33,7 +33,11 @@ namespace webapp
                 // browser is guaranteed to receive up-to-date build output
                 // instance of webpack stays active and has partial compilation states pre-cached in memory
                 // requires aspnet-webpack
-                app.UseWebpackDevMiddleware();
+                app.UseWebpackDevMiddleware(new Microsoft.AspNetCore.SpaServices.Webpack.WebpackDevMiddlewareOptions
+                {
+                    HotModuleReplacement = true,
+                    ReactHotModuleReplacement = true
+                });
             }
 
             app.UseMvc(routes =>

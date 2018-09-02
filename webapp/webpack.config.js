@@ -11,6 +11,10 @@ module.exports = (env) => {
             extensions: [".ts", ".tsx", ".js", ".json"]
         },
 
+        output: {
+            filename: "[name].js",
+            publicPath: "dist/" // - Needed for server side and client-side path  Webpack dev middleware, if enabled, handles requests for this URL prefix
+        },
         module: {
             rules: [
                 // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
@@ -25,8 +29,6 @@ module.exports = (env) => {
     const clientBundleConfig = merge(sharedConfig(), {
         entry: { "main-client": "./ClientApp/boot-client.tsx" },
         output: {
-            publicPath: "/dist/",
-            filename: "[name].js",
             path: path.join(__dirname, "./wwwroot/dist")
         },
         // When importing a module whose path matches one of the following, just
@@ -43,7 +45,6 @@ module.exports = (env) => {
     const serverBundleConfig = merge(sharedConfig(), {
         entry: { "main-server": "./ClientApp/boot-server.tsx" },
         output: {
-            filename: "[name].js",
             path: path.join(__dirname, "./ClientApp/dist"),
             libraryTarget: "commonjs" // get missing default error without this
         },
