@@ -25,6 +25,7 @@ module.exports = (env) => {
     const clientBundleConfig = merge(sharedConfig(), {
         entry: { "main-client": "./ClientApp/boot-client.tsx" },
         output: {
+            publicPath: "/dist/",
             filename: "[name].js",
             path: path.join(__dirname, "./wwwroot/dist")
         },

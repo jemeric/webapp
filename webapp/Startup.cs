@@ -29,6 +29,11 @@ namespace webapp
             {
                 app.UseDeveloperExceptionPage();
                 ServeFromDirectory(app, env, "node_modules");
+                // intercepts requests that would match files built by webpack and dynamically builds those files on demand
+                // browser is guaranteed to receive up-to-date build output
+                // instance of webpack stays active and has partial compilation states pre-cached in memory
+                // requires aspnet-webpack
+                app.UseWebpackDevMiddleware();
             }
 
             app.UseMvc(routes =>

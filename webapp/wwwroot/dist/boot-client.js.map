@@ -1,1 +1,0 @@
-{"version":3,"file":"boot-client.js","sourceRoot":"","sources":["../../ClientApp/boot-client.tsx"],"names":[],"mappings":";;AAAA,6BAA+B;AAC/B,oCAAsC;AAEtC,4CAA2C;AAE3C,SAAS,SAAS;IACd,+DAA+D;IAC/D,QAAQ,CAAC,OAAO,CAAC,oBAAC,aAAK,IAAC,QAAQ,EAAC,aAAa,EAAC,SAAS,EAAC,OAAO,GAAG,EAC/D,QAAQ,CAAC,cAAc,CAAC,SAAS,CAAC,CAAC,CAAC;AAC5C,CAAC;AAED,SAAS,EAAE,CAAC"}
