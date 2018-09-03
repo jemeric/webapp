@@ -10,7 +10,6 @@ module.exports = (env) => {
             // Add '.ts' and '.tsx' as resolvable extensions.
             extensions: [".ts", ".tsx", ".js", ".json"]
         },
-
         output: {
             filename: "[name].js",
             publicPath: "dist/" // - Needed for server side and client-side path  Webpack dev middleware, if enabled, handles requests for this URL prefix
