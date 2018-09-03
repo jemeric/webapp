@@ -4,7 +4,7 @@ const merge = require("webpack-merge");
 module.exports = (env) => {
 
     const isDevBuild = !(env && env.prod);
-
+    
     const sharedConfig = () => ({
         resolve: {
             // Add '.ts' and '.tsx' as resolvable extensions.
@@ -23,7 +23,10 @@ module.exports = (env) => {
                 // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
                 { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
             ]
-        }
+        },
+        // issue in SpaServices mean this is needed even if it is empty
+        // if not there hot reload can't find updates
+        plugins: []
     });
 
     const clientBundleConfig = merge(sharedConfig(), {

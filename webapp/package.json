@@ -13,6 +13,9 @@
   "devDependencies": {
     "@types/react": "^16.4.11",
     "@types/react-dom": "^16.0.7",
+    "@types/react-hot-loader": "4.1.0",
+    "@types/webpack": "4.4.11",
+    "@types/webpack-env": "1.13.6",
     "awesome-typescript-loader": "^5.2.0",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
