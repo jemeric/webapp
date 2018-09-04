@@ -1,12 +1,17 @@
 ﻿import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { renderToString } from 'react-dom/server';
 import { AppContainer } from 'react-hot-loader';
-import { Hello } from './components/Hello';
+import { App } from './components/App';
+import { BrowserRouter } from 'react-router-dom';
 
 function renderApp() {
     // This code starts up the React app when it runs in a browser.
-    ReactDOM.hydrate(<AppContainer><Hello compiler="Typescript" framework="React" /></AppContainer>,
+    ReactDOM.hydrate(
+        <AppContainer>
+            <BrowserRouter>
+                <App compiler="Typescript" framework="React" />
+            </BrowserRouter>
+        </AppContainer>,
         document.getElementById("example"));
 }
 

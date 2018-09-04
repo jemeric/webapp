@@ -1,11 +1,11 @@
 ﻿import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-import { Hello } from "./components/Hello";
+import { App } from "./components/App";
 
 function renderApp() {
     ReactDOM.render(
-        <Hello compiler="Typescript" framework="React" />,
+        <App compiler="Typescript" framework="React" />,
         document.getElementById("example")
     );
 }
