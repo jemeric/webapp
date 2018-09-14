@@ -15,8 +15,7 @@ export class App extends React.Component<AppProps, {}> {
         return <div>
             <header>
                 <h1>Hello from {this.props.compiler} and {this.props.framework}!!</h1>
-                <NavLink to="/" exact>Home</NavLink>
-                <NavLink to="/users">Users</NavLink>
+                <NavLink to="/" exact>Home</NavLink> | <NavLink to="/users">Users</NavLink>
             </header>
             <main>
                 {/* use switch for exclusive routing - just 1 match */}
