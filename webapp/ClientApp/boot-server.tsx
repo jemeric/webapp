@@ -21,8 +21,11 @@ export default createServerRenderer(params => {
             return;
         }
 
-        resolve({
-            html: renderToString(app)
-        });
+        // once any async tasks are done, we can perform the final render
+        params.domainTasks.then(() => {
+            resolve({
+                html: renderToString(app)
+            });
+        }, reject); // also propagate any errors back into the host application
     });
 });
