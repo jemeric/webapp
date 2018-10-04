@@ -20,37 +20,8 @@ module.exports = (env) => {
             rules: [
                 // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
                 { test: /\.tsx?$/, loader: "awesome-typescript-loader" },
-
                 // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
-                { enforce: "pre", test: /\.js$/, loader: "source-map-loader" },
-                {
-                    test: /\.(scss)$/,
-                    use: [
-                        {
-                            // Adds CSS to the DOM by injecting a '<style>' tag
-                            loader: 'style-loader'
-                        },
-                        {
-                            // Interprets '@import' and '@url()' like 'import/required()' and will resolve them
-                            loader: 'css-loader'
-                        },
-                        {
-                            // Loader for webpack to process CSS with PostCSS
-                            loader: 'postcss-loader',
-                            options: {
-                                plugins: function () {
-                                    return [
-                                        require('autoprefixer')
-                                    ];
-                                }
-                            }
-                        },
-                        {
-                            // Loads a SASS/SCSS file and compiles it to CSS
-                            loader: 'sass-loader'
-                        }
-                    ]
-                }
+                { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
             ]
         },
         // issue in SpaServices mean this is needed even if it is empty
@@ -69,7 +40,9 @@ module.exports = (env) => {
                     test: /\.s?[ac]ss$/,
                     use: [
                         MiniCssExtractPlugin.loader,
+                        // Interprets '@import' and '@url()' like 'import/required()' and will resolve them
                         { loader: 'css-loader', options: { url: false, sourceMap: true } },
+                        // Loads a SASS/SCSS file and compiles it to CSS
                         { loader: 'sass-loader', options: { sourceMap: true } }
                     ]
                 }
