@@ -1,4 +1,5 @@
-﻿import * as React from 'react';
+﻿import './scss/app.scss'; // needed for compilation to style.css
+import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
 import { App } from './components/App';

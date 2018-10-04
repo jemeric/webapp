@@ -5,14 +5,16 @@
 
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8" />
-        <title>Hello React!</title>
-    </head>
+<head>
+    <meta charset="UTF-8" />
+    <title>Hello React!</title>
+    <link rel="stylesheet" type="text/css" href="/dist/style.css">
+</head>
     <body>
         <div id="example" asp-prerender-module="ClientApp/dist/main-server"></div>
 
         <!-- Dependencies -->
+        <!-- TODO - introspect package.json and dynamically load the version via cdn -->
         <script src="~/node_modules/react/umd/react.development.js"></script>
         <script src="~/node_modules/react-dom/umd/react-dom.development.js"></script>
 
