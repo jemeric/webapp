@@ -1,4 +1,5 @@
-﻿
+﻿@using webapp.Services;
+@inject NPMManagerService npmManager;
 @{
     ViewData["Title"] = "Index";
 }
@@ -10,16 +11,16 @@
     <title>Hello React!</title>
     <link rel="stylesheet" type="text/css" href="/dist/style.css">
 </head>
-    <body>
-        <div id="example" asp-prerender-module="ClientApp/dist/main-server"></div>
+<body>
+    <div id="example" asp-prerender-module="ClientApp/dist/main-server"></div>
 
-        <!-- Dependencies -->
-        <!-- TODO - introspect package.json and dynamically load the version via cdn -->
-        <script src="~/node_modules/react/umd/react.development.js"></script>
-        <script src="~/node_modules/react-dom/umd/react-dom.development.js"></script>
+    <!-- Dependencies -->
+    <!-- TODO - introspect package.json and dynamically load the version via cdn -->
+    <script src="@npmManager.GetModuleUrl("react@16.4.2", "umd/react.production.min.js", "umd/react.development.js")"></script>
+    <script src="@npmManager.GetModuleUrl("react-dom@16.4.2", "umd/react-dom.production.min.js", "umd/react-dom.development.js")"></script>
 
-        <!-- Main -->
-        <script src="~/dist/main-client.js"></script>
-    </body>
+    <!-- Main -->
+    <script src="~/dist/main-client.js"></script>
+</body>
 </html>
 

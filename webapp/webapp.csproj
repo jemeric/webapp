@@ -14,8 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Assets\Images\" />
     <Folder Include="ClientApp\dist\" />
-    <Folder Include="wwwroot\" />
     <Folder Include="wwwroot\dist\" />
   </ItemGroup>
 

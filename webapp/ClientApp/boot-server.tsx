@@ -9,6 +9,7 @@ export default createServerRenderer(params => {
         // this context object contains the results of the render (i.e. context.url will contain URL to redirect to if <Redirect> was used)
         const routerContext: any = {};
 
+        // static router = a router that never changes location (on server-side render things won't change)
         const app = (
             <StaticRouter context={routerContext} location={params.location.path}>
                 <App compiler="Typescript" framework="React" />

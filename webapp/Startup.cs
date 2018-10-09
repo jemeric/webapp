@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using webapp.Services;
 
 namespace webapp
 {
@@ -18,6 +19,10 @@ namespace webapp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            // setup dependencies for injection here
+            services.AddSingleton<NPMManagerService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

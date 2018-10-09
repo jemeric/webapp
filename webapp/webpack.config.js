@@ -1,4 +1,5 @@
-﻿const path = require("path");
+﻿const externals = require('./Assets/Json/npm-externals.json');
+const path = require("path");
 const merge = require("webpack-merge");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
@@ -58,10 +59,7 @@ module.exports = (env) => {
         // This is important because it allows us to avoid bundling all of our
         // dependencies, which allows browsers to cache those libraries between builds.
         // TODO - only do this on client-side
-        externals: {
-            "react": "React",
-            "react-dom": "ReactDOM"
-        }
+        externals
     });
 
     const serverBundleConfig = merge(sharedConfig(), {
