@@ -29,5 +29,10 @@ namespace webapp.Services
             return String.Concat(npmCdn, package, "/", productionAsset);
         }
 
+        public static string GetVersion()
+        {
+            return null;
+        }
+
     }
 }
