@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace webapp.Services
 {
@@ -29,7 +30,8 @@ namespace webapp.Services
             return String.Concat(npmCdn, package, "/", productionAsset);
         }
 
-        public static string GetVersion()
+        // see https://semver.npmjs.com/
+        public static string CalculateSemVer(string range, JObject registry)
         {
             return null;
         }
