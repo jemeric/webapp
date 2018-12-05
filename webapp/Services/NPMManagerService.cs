@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using SemVer;
 
 namespace webapp.Services
 {
@@ -33,7 +34,11 @@ namespace webapp.Services
         // see https://semver.npmjs.com/
         public static string CalculateSemVer(string range, JObject registry)
         {
-            return null;
+            var versions = from activityMap in registry["time"].Children<JProperty>()
+                           from activities in activityMap.Value
+                           select (string)activities;
+
+            return Range.MaxSatisfying("", versions.ToArray<string>());
         }
 
     }

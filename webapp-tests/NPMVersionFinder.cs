@@ -13,11 +13,11 @@ namespace webapp_tests
         {
             // from http://registry.npmjs.org/lodash
 
-            JObject registry = JObject.Parse(File.ReadAllText(@"\Json\lodash-registry.json"));
+            JObject registry = JObject.Parse(File.ReadAllText("./Json/lodash-registry.json"));
 
             // see https://semver.npmjs.com/
-            NPMManagerService.CalculateSemVer("latest", registry); // TO-TEST
-            Assert.False(true, "This should be false");
+            NPMManagerService.CalculateSemVer("1.0.0 - 1.2.0", registry); // TO-TEST
+            Assert.Equal("1.2.0", NPMManagerService.CalculateSemVer("1.0.0 - 1.2.0", registry));
         }
     }
 }
