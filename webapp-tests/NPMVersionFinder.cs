@@ -16,8 +16,14 @@ namespace webapp_tests
             JObject registry = JObject.Parse(File.ReadAllText("./Json/lodash-registry.json"));
 
             // see https://semver.npmjs.com/
-            NPMManagerService.CalculateSemVer("1.0.0 - 1.2.0", registry); // TO-TEST
-            Assert.Equal("1.2.0", NPMManagerService.CalculateSemVer("1.0.0 - 1.2.0", registry));
+            NPMManagerService.GetNPMVersion("1.0.0 - 1.2.0", registry); // TO-TEST
+            Assert.Equal("1.2.0", NPMManagerService.GetNPMVersion("1.0.0 - 1.2.0", registry));
+            Assert.Equal("1.3.1", NPMManagerService.GetNPMVersion("1.x", registry));
+            Assert.Equal("1.0.0-rc.1", NPMManagerService.GetNPMVersion("1.0.0-rc.1", registry));
+            Assert.Equal("4.17.11", NPMManagerService.GetNPMVersion(">2.1", registry));
+            Assert.Equal("4.17.11", NPMManagerService.GetNPMVersion("latest", registry));
+
+
         }
     }
 }

@@ -32,13 +32,20 @@ namespace webapp.Services
         }
 
         // see https://semver.npmjs.com/
-        public static string CalculateSemVer(string range, JObject registry)
+        public static string GetNPMVersion(string rangeOrTag, JObject registry)
         {
-            var versions = from activityMap in registry["time"].Children<JProperty>()
-                           from activities in activityMap.Value
-                           select (string)activities;
+            string tag = (from tags in registry["dist-tag"].Values<JProperty>()
+                          where rangeOrTag.Equals(tags.Name)
+                          select tags.Name).FirstOrDefault();
+            if(tag != null)
+            {
+                return tag;
+            }                     
 
-            return Range.MaxSatisfying("", versions.ToArray<string>());
+           var versions = from dists in registry["time"].Values<JProperty>()
+                           select dists.Name;
+
+            return Range.MaxSatisfying(rangeOrTag, versions.ToArray());
         }
 
     }
