@@ -34,9 +34,9 @@ namespace webapp.Services
         // see https://semver.npmjs.com/
         public static string GetNPMVersion(string rangeOrTag, JObject registry)
         {
-            string tag = (from tags in registry["dist-tag"].Values<JProperty>()
+            string tag = (from tags in registry["dist-tags"].Values<JProperty>()
                           where rangeOrTag.Equals(tags.Name)
-                          select tags.Name).FirstOrDefault();
+                          select tags).Select(t => t.Value.Value<string>()).FirstOrDefault();
             if(tag != null)
             {
                 return tag;
