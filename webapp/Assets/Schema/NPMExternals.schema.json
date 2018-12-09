@@ -1,0 +1,54 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema",
+    "title": "NPM Externals",
+    "description": "Prevent bundling of these imported packages and instead retrieve at runtime",
+    "type": "array",
+    "items": {
+        "$ref": "#/definitions/external"
+    },
+    "definitions": {
+        "external": {
+            "type": "object",
+            "properties": {
+                "key": {
+                    "type": "string",
+                    "title": "Webpack External Key"
+                },
+                "package": {
+                    "type": "string",
+                    "title": "NPM Package",
+                    "description": "The package we will load from an external source"
+                },
+                "assets": {
+                    "type": "array",
+                    "title": "External Asset",
+                    "description": "The file we want to load from an external source",
+                    "items": {
+                        "$ref": "#/definitions/externalAsset"
+                    }
+                }
+            },
+            "additionalProperties": false,
+            "required": [ "key", "package" ]
+        },
+        "externalAsset": {
+            "type": "object",
+            "title": "External Asset",
+            "description": "The NPM asset that will be loaded from an external source",
+            "properties": {
+                "production": {
+                    "type": "string",
+                    "title": "Production File",
+                    "description": "The file that will be loaded in production mode"
+                },
+                "development": {
+                    "type": "string",
+                    "title": "Devcelopment File",
+                    "description": "The file that will be loaded in development mode"
+                }
+            },
+            "additionalProperties": false,
+            "required": ["production"]
+        }
+    }
+}

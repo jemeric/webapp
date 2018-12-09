@@ -1,0 +1,22 @@
+[
+    {
+        "key": "react",
+        "package": "React",
+        "assets": [
+            {
+                "productionPath": "umd/react.production.min.js",
+                "developmentPath": "umd/react-dom.development.js"
+            }
+        ]
+    },
+    {
+        "key": "react-dom",
+        "package": "ReactDOM",
+        "assets": [
+            {
+                "productionPath": "umd/react-dom.production.min.js",
+                "developmentPath": "umd/react-dom.production.min.js"
+            }
+        ]
+    }
+]

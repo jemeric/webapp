@@ -1,4 +1,4 @@
-﻿const externals = require('./Assets/Json/npm-externals.json');
+﻿const NPMExternals = require('./Assets/Json/NPMExternals.json');
 const path = require("path");
 const merge = require("webpack-merge");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -6,7 +6,8 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 module.exports = (env) => {
 
     const isDevBuild = !(env && env.prod);
-    
+    const externals = NPMExternals.reduce((obj, cur, i) => (obj[cur.key] = cur.package, obj), {});
+
     const sharedConfig = () => ({
         mode: isDevBuild ? 'development' : 'production',
         resolve: {
@@ -58,7 +59,7 @@ module.exports = (env) => {
         // assume a corresponding global variable exists and use that instead.
         // This is important because it allows us to avoid bundling all of our
         // dependencies, which allows browsers to cache those libraries between builds.
-        // TODO - only do this on client-side
+        // NOTE* only do this on client-side
         externals
     });
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Newtonsoft.Json.Linq;
 using SemVer;
 
@@ -10,10 +11,12 @@ namespace webapp.Services
     public class NPMManagerService
     {
         const string npmCdn = "https://cdn.jsdelivr.net/npm/";
+        private readonly IHostingEnvironment env;
 
-        public NPMManagerService()
+        public NPMManagerService(IHostingEnvironment env)
         {
             InitializePackageVersions();
+            this.env = env;
         }
 
         private void InitializePackageVersions()
@@ -24,8 +27,7 @@ namespace webapp.Services
         public string GetModuleUrl(string package, string productionAsset, string developmentAsset = null)
         {
             // TODO automatically get version from package.json
-            bool isProduction = false; // TODO determine development or production based on environment
-            string asset = isProduction ? 
+            string asset = env.IsProduction() ? 
                 productionAsset : 
                 developmentAsset ?? productionAsset;
             return String.Concat(npmCdn, package, "/", productionAsset);
