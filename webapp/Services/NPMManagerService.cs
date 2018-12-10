@@ -33,11 +33,21 @@ namespace webapp.Services
             return String.Concat(npmCdn, package, "/", productionAsset);
         }
 
+        public static string GetSemanticVersion(string package, JObject packageJson)
+        {
+            // https://github.com/webpack/webpack/issues/520#issuecomment-174011824
+            // app built using webpack has no runtime dependencies and thus all frontend dependencies
+            // should be listed as devDependencies
+            return (from dependencies in packageJson["devDependencies"].Values<JProperty>()
+                    where package.Equals(dependencies.Name)
+                    select dependencies).Select(d => d.Value.Value<string>()).FirstOrDefault();
+        }
+        
         // see https://semver.npmjs.com/
-        public static string GetNPMVersion(string rangeOrTag, JObject registry)
+        public static string GetMaxVersion(string semanticVersionOrTag, JObject registry)
         {
             string tag = (from tags in registry["dist-tags"].Values<JProperty>()
-                          where rangeOrTag.Equals(tags.Name)
+                          where semanticVersionOrTag.Equals(tags.Name)
                           select tags).Select(t => t.Value.Value<string>()).FirstOrDefault();
             if(tag != null)
             {
@@ -47,7 +57,7 @@ namespace webapp.Services
            var versions = from dists in registry["time"].Values<JProperty>()
                            select dists.Name;
 
-            return Range.MaxSatisfying(rangeOrTag, versions.ToArray());
+            return Range.MaxSatisfying(semanticVersionOrTag, versions.ToArray());
         }
 
     }

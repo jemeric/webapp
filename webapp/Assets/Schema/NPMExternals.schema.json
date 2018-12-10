@@ -17,12 +17,12 @@
                 "package": {
                     "type": "string",
                     "title": "NPM Package",
-                    "description": "The package we will load from an external source"
+                    "description": "The package to be excluded from the bundle"
                 },
                 "assets": {
                     "type": "array",
-                    "title": "External Asset",
-                    "description": "The file we want to load from an external source",
+                    "title": "External Assets",
+                    "description": "The assets we want to load from this package",
                     "items": {
                         "$ref": "#/definitions/externalAsset"
                     }
