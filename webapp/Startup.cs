@@ -18,6 +18,9 @@ namespace webapp
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            // see https://docs.microsoft.com/en-us/aspnet/core/performance/caching/memory?view=aspnetcore-2.2
+            services.AddMemoryCache();
+
             services.AddMvc();
 
             // setup dependencies for injection here
@@ -33,7 +36,7 @@ namespace webapp
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                ServeFromDirectory(app, env, "node_modules");
+                //ServeFromDirectory(app, env, "node_modules"); grab from external
                 // intercepts requests that would match files built by webpack and dynamically builds those files on demand
                 // browser is guaranteed to receive up-to-date build output
                 // instance of webpack stays active and has partial compilation states pre-cached in memory

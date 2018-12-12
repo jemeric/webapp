@@ -16,7 +16,6 @@
   <ItemGroup>
     <Folder Include="Assets\Images\" />
     <Folder Include="ClientApp\dist\" />
-    <Folder Include="Util\" />
     <Folder Include="wwwroot\dist\" />
   </ItemGroup>
 
