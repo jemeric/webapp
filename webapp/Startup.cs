@@ -19,7 +19,7 @@ namespace webapp
         public void ConfigureServices(IServiceCollection services)
         {
             // see https://docs.microsoft.com/en-us/aspnet/core/performance/caching/memory?view=aspnetcore-2.2
-            services.AddMemoryCache();
+            //services.AddMemoryCache();
 
             services.AddMvc();
 

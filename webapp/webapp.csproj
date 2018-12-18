@@ -20,9 +20,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="LazyCache" Version="0.7.1.44" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.6" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.6" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="Nito.AsyncEx.Coordination" Version="1.0.2" />
+    <PackageReference Include="Nito.AsyncEx.Tasks" Version="1.1.0" />
     <PackageReference Include="SemanticVersioning" Version="1.2.0" />
   </ItemGroup>
 

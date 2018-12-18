@@ -11,25 +11,46 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SemVer;
 using webapp.Util.Dto;
+using Nito.AsyncEx;
 
 namespace webapp.Services
 {
     public class NPMManagerService
     {
         const string npmCdn = "https://cdn.jsdelivr.net/npm/";
+        const string registry = "http://registry.npmjs.org/";
         private readonly IHostingEnvironment env;
-        private readonly IMemoryCache _cache;
-        private Dictionary<string, string> packageVersions;
+        private readonly MemoryCache versionCache;
+        private readonly AsyncLazy<JObject> packageJson;
 
-        public NPMManagerService(IHostingEnvironment env, IMemoryCache memoryCache)
+        public NPMManagerService(IHostingEnvironment env)
         {
-            InitializePackageVersions();
             this.env = env;
-            this._cache = memoryCache;
+            // see "cached values" http://blog.stephencleary.com/2013/01/async-oop-3-properties.html
+            packageJson = new AsyncLazy<JObject>(async () =>
+            {
+                return await Task.Run<JObject>(() => JObject.Parse(File.ReadAllText(env.ContentRootPath + "package.json")));
+            });
+            packageJson.Start();
+
+            // this should be built on a lazy refresh cache, for now just cache indefinitely or until it grows too large
+            // see https://github.com/aspnet/Extensions/issues/769
+            this.versionCache = new MemoryCache(new MemoryCacheOptions
+            {
+                SizeLimit = 1024
+            });
+
+            InitializePackageVersions();
         }
 
         private void InitializePackageVersions()
         {
+
+
+            // read in package.json
+            //env.ContentRootPath
+
+
             // TODO - update to use RX extensions
             //GetExternals().
         }
@@ -46,9 +67,28 @@ namespace webapp.Services
             }
         }
 
-        public string GetNPMModule(string package, string semanticVersion, string asset)
+        public async Task<string> GetNPMModule(string package, string asset)
         {
-            return null;
+            return await GetNPMModule(package, GetSemanticVersion(package, await packageJson), asset);
+        }
+
+        public async Task<string> GetNPMModule(string package, string semanticVersion, string asset)
+        {
+
+            // TODO - get registry + cache version if not already in version cache
+            //lazyCache.GetOrAddAsync("test", () =>
+            //{
+            //    return Task.FromResult("test");
+            //});
+            ////lazyCache.GetOrAddAsync()
+            ////var cacheEntryOptions = new MemoryCacheEntryOptions()
+            ////    .
+            ////_cache.Set("", "", MemoryCacheEntryOptions.)
+            //_cache.GetOrCreateAsync<string>("test", e => {
+            //    return Task.FromResult<string>("test");
+            //});
+
+            return ""; // IMemoryCache - PostEvictionDelegate ?
         }
 
         public string GetModuleUrl(string package, string productionAsset, string developmentAsset = null)
