@@ -6,7 +6,7 @@ using Xunit;
 
 namespace webapp_tests
 {
-    public class NPMVersionFinder
+    public class NPMExternalTests
     {
         [Fact]
         public void TestSemanticVersionLookup()

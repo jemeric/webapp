@@ -12,6 +12,7 @@ using Newtonsoft.Json.Linq;
 using SemVer;
 using webapp.Util.Dto;
 using Nito.AsyncEx;
+using System.Net.Http;
 
 namespace webapp.Services
 {
@@ -29,7 +30,7 @@ namespace webapp.Services
             // see "cached values" http://blog.stephencleary.com/2013/01/async-oop-3-properties.html
             packageJson = new AsyncLazy<JObject>(async () =>
             {
-                return await Task.Run<JObject>(() => JObject.Parse(File.ReadAllText(env.ContentRootPath + "package.json")));
+                return await Task.Run<JObject>(() => JObject.Parse(File.ReadAllText($"{env.ContentRootPath}package.json")));
             });
             packageJson.Start();
 
@@ -40,19 +41,34 @@ namespace webapp.Services
                 SizeLimit = 1024
             });
 
+            // TODO - we need to wait for this (dependency injection?)
             InitializePackageVersions();
         }
 
         private void InitializePackageVersions()
         {
-
-
-            // read in package.json
-            //env.ContentRootPath
-
-
             // TODO - update to use RX extensions
-            //GetExternals().
+            GetExternals().Select(external => new { external.Package, Version = GetVersion(external.Package) });
+        }
+
+        private Task<string> GetVersion(string package)
+        {
+            return versionCache.GetOrCreateAsync<string>(package, async (entry) =>
+            {
+                JObject npmPackageObj = await packageJson;
+                JObject registryObj = await GetRegistry(package);
+                return GetMaxVersion(GetSemanticVersion(package, npmPackageObj), registryObj);
+            });
+        }
+
+        private async Task<JObject> GetRegistry(string package)
+        {
+            using(HttpClient client = new HttpClient())
+            {
+                // TODO update to use caching + streams
+                String registryBody = await client.GetStringAsync($"{registry}{package}");
+                return JObject.Parse(registryBody);
+            }
         }
 
         private List<NPMExternal> GetExternals()
