@@ -18,11 +18,12 @@ namespace webapp.Services
 {
     public class NPMManagerService
     {
-        const string npmCdn = "https://cdn.jsdelivr.net/npm/";
-        const string registry = "http://registry.npmjs.org/";
+        const string npmCdnUrl = "https://cdn.jsdelivr.net/npm/";
+        const string registryBaseUrl = "http://registry.npmjs.org/";
         private readonly IHostingEnvironment env;
         private readonly MemoryCache versionCache;
         private readonly AsyncLazy<JObject> packageJson;
+        private readonly AsyncLazy<List<NPMExternal>> externals;
 
         public NPMManagerService(IHostingEnvironment env)
         {
@@ -33,6 +34,13 @@ namespace webapp.Services
                 return await Task.Run<JObject>(() => JObject.Parse(File.ReadAllText($"{env.ContentRootPath}package.json")));
             });
             packageJson.Start();
+            externals = new AsyncLazy<List<NPMExternal>>(async () =>
+            {
+                return await Task.Run<List<NPMExternal>>(() => {
+                    return JsonConvert.DeserializeObject<List<NPMExternal>>(File.ReadAllText($"{env.ContentRootPath}Assets/Json/NPMExternals.json"));
+                });
+            });
+            externals.Start();
 
             // this should be built on a lazy refresh cache, for now just cache indefinitely or until it grows too large
             // see https://github.com/aspnet/Extensions/issues/769
@@ -45,19 +53,32 @@ namespace webapp.Services
             InitializePackageVersions();
         }
 
-        private void InitializePackageVersions()
+        private async void InitializePackageVersions()
         {
             // TODO - update to use RX extensions
-            GetExternals().Select(external => new { external.Package, Version = GetVersion(external.Package) });
+            // cache the package versions for each of our externals
+            var versions = (await externals).Select(external => GetVersion(external.Package));
+            await Task.WhenAll(versions);
         }
 
-        private Task<string> GetVersion(string package)
+        public async Task<List<NPMExternal>> GetExternals()
         {
-            return versionCache.GetOrCreateAsync<string>(package, async (entry) =>
+            return await externals;
+        }
+
+        private async Task<string> GetVersion(string package)
+        {
+            JObject npmPackageObj = await packageJson;
+            return await GetVersion(package, GetSemanticVersion(package, npmPackageObj));
+        }
+
+        public Task<string> GetVersion(string package, string semanticVersionOrTag)
+        {
+            return versionCache.GetOrCreateAsync<string>($"{package}@{semanticVersionOrTag}", async (entry) =>
             {
-                JObject npmPackageObj = await packageJson;
+                // TODO - expire cache - pending https://github.com/aspnet/Extensions/issues/769
                 JObject registryObj = await GetRegistry(package);
-                return GetMaxVersion(GetSemanticVersion(package, npmPackageObj), registryObj);
+                return GetMaxVersion(semanticVersionOrTag, registryObj);
             });
         }
 
@@ -65,55 +86,25 @@ namespace webapp.Services
         {
             using(HttpClient client = new HttpClient())
             {
-                // TODO update to use caching + streams
-                String registryBody = await client.GetStringAsync($"{registry}{package}");
+                // TODO update to use caching + streaming
+                String registryBody = await client.GetStringAsync($"{registryBaseUrl}{package}");
                 return JObject.Parse(registryBody);
             }
         }
 
-        private List<NPMExternal> GetExternals()
+        public async Task<string> GetNPMModule(string package, string semanticVersion, string productionAsset, string developmentAsset = null)
         {
-            // TODO - update to use RX extensions
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            using (StreamReader sr = new StreamReader(assembly.GetManifestResourceStream("app.Assets.Json.NPMExternals.json")))
-            using (JsonReader jr = new JsonTextReader(sr))
-            {
-                JsonSerializer serializer = new JsonSerializer();
-                return serializer.Deserialize<List<NPMExternal>>(jr);
-            }
+            string version = await GetVersion(package, semanticVersion);
+            return GetModuleUrl(package, version, productionAsset, developmentAsset);
         }
 
-        public async Task<string> GetNPMModule(string package, string asset)
-        {
-            return await GetNPMModule(package, GetSemanticVersion(package, await packageJson), asset);
-        }
-
-        public async Task<string> GetNPMModule(string package, string semanticVersion, string asset)
-        {
-
-            // TODO - get registry + cache version if not already in version cache
-            //lazyCache.GetOrAddAsync("test", () =>
-            //{
-            //    return Task.FromResult("test");
-            //});
-            ////lazyCache.GetOrAddAsync()
-            ////var cacheEntryOptions = new MemoryCacheEntryOptions()
-            ////    .
-            ////_cache.Set("", "", MemoryCacheEntryOptions.)
-            //_cache.GetOrCreateAsync<string>("test", e => {
-            //    return Task.FromResult<string>("test");
-            //});
-
-            return ""; // IMemoryCache - PostEvictionDelegate ?
-        }
-
-        public string GetModuleUrl(string package, string productionAsset, string developmentAsset = null)
+        public string GetModuleUrl(string package, string version, string productionAsset, string developmentAsset = null)
         {
             // TODO automatically get version from package.json
             string asset = env.IsProduction() ? 
                 productionAsset : 
                 developmentAsset ?? productionAsset;
-            return String.Concat(npmCdn, package, "/", productionAsset);
+            return $"{npmCdnUrl}{package}@{version}/{asset}";
         }
         
         public static string GetSemanticVersion(string package, JObject packageJson)
