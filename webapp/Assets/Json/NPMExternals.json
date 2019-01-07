@@ -1,7 +1,7 @@
 [
     {
-        "key": "react",
-        "package": "React",
+        "module": "react",
+        "global": "React",
         "assets": [
             {
                 "productionPath": "umd/react.production.min.js",
@@ -10,8 +10,8 @@
         ]
     },
     {
-        "key": "react-dom",
-        "package": "ReactDOM",
+        "module": "react-dom",
+        "global": "ReactDOM",
         "assets": [
             {
                 "productionPath": "umd/react-dom.production.min.js",

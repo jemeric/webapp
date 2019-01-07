@@ -10,14 +10,15 @@
         "external": {
             "type": "object",
             "properties": {
-                "key": {
+                "module": {
                     "type": "string",
-                    "title": "Webpack External Key"
+                    "title": "NPM Module",
+                    "description": "The module to be excluded from the bundle (i.e. react)"
                 },
-                "package": {
+                "global": {
                     "type": "string",
-                    "title": "NPM Package",
-                    "description": "The package to be excluded from the bundle"
+                    "title": "Webpack External Key",
+                    "description": "The name of the variable retrieved as a global"
                 },
                 "assets": {
                     "type": "array",
@@ -48,7 +49,7 @@
                 }
             },
             "additionalProperties": false,
-            "required": ["production"]
+            "required": [ "production" ]
         }
     }
 }

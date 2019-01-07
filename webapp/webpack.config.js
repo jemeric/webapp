@@ -6,7 +6,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 module.exports = (env) => {
 
     const isDevBuild = !(env && env.prod);
-    const externals = NPMExternals.reduce((obj, cur, i) => (obj[cur.key] = cur.package, obj), {});
+    const externals = NPMExternals.reduce((obj, cur, i) => (obj[cur.module] = cur.global, obj), {});
 
     const sharedConfig = () => ({
         mode: isDevBuild ? 'development' : 'production',

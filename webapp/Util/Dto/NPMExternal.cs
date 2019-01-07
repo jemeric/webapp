@@ -8,10 +8,10 @@ namespace webapp.Util.Dto
 {
     public class NPMExternal
     {
-        [JsonProperty("key")]
-        public string Key { get; set;  }
-        [JsonProperty("package")]
-        public string Package { get; set; }
+        [JsonProperty("global")]
+        public string Global { get; set;  }
+        [JsonProperty("module")]
+        public string Module { get; set; }
         [JsonProperty("assets")]
         public NPMAsset[] Assets { get; set; }
     }

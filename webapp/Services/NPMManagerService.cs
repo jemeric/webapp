@@ -32,13 +32,13 @@ namespace webapp.Services
             // see "cached values" http://blog.stephencleary.com/2013/01/async-oop-3-properties.html
             packageJson = new AsyncLazy<JObject>(async () =>
             {
-                return await Task.Run<JObject>(() => JObject.Parse(File.ReadAllText($"{env.ContentRootPath}package.json")));
+                return await Task.Run<JObject>(() => JObject.Parse(File.ReadAllText($"{env.ContentRootPath}/package.json")));
             });
             packageJson.Start();
             externals = new AsyncLazy<List<NPMExternal>>(async () =>
             {
                 return await Task.Run<List<NPMExternal>>(() => {
-                    return JsonConvert.DeserializeObject<List<NPMExternal>>(File.ReadAllText($"{env.ContentRootPath}Assets/Json/NPMExternals.json"));
+                    return JsonConvert.DeserializeObject<List<NPMExternal>>(File.ReadAllText($"{env.ContentRootPath}/Assets/Json/NPMExternals.json"));
                 });
             });
             externals.Start();
@@ -55,12 +55,12 @@ namespace webapp.Services
         {
             // build external version list based on package.json <key -> version>
             JObject npmPackageObject = await packageJson;
-            externalVersions = (await externals).Select(external => new { external.Key, Version = GetSemanticVersion(external.Package, npmPackageObject) })
-                .ToDictionary(externalToVersion => externalToVersion.Key, externalToVersion => externalToVersion.Version);
+            externalVersions = (await externals).Select(external => new { external.Module, Version = GetSemanticVersion(external.Module, npmPackageObject) })
+                .ToDictionary(externalToVersion => externalToVersion.Module, externalToVersion => externalToVersion.Version);
 
             // TODO - update to use RX extensions
             // cache the package versions for each of our externals
-            var versions = (await externals).Select(external => GetVersion(external.Package));
+            var versions = (await externals).Select(external => GetVersion(external.Module));
             await Task.WhenAll(versions);
         }
 
@@ -90,6 +90,7 @@ namespace webapp.Services
             using(HttpClient client = new HttpClient())
             {
                 // TODO update to use caching + streaming
+                var test = $"{registryBaseUrl}{package}";
                 String registryBody = await client.GetStringAsync($"{registryBaseUrl}{package}");
                 return JObject.Parse(registryBody);
             }
@@ -97,7 +98,7 @@ namespace webapp.Services
 
         public async Task<string> GetNPMModule(NPMExternal external, string productionAsset, string developmentAsset)
         {
-            return await GetNPMModule(external.Package, externalVersions[external.Key], productionAsset, developmentAsset);
+            return await GetNPMModule(external.Module, externalVersions[external.Global], productionAsset, developmentAsset);
         }
 
         public async Task<string> GetNPMModule(string package, string semanticVersion, string productionAsset, string developmentAsset = null)
