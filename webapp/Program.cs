@@ -16,7 +16,7 @@ namespace webapp
         {
             IWebHost webHost = BuildWebHost(args);
             /* perform initialization here - see https://www.thomaslevesque.com/2018/09/25/asynchronous-initialization-in-asp-net-core-revisited/ */
-            webHost.InitAsync();
+            await webHost.InitAsync();
             webHost.Run();
         }
 
