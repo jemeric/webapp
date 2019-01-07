@@ -24,6 +24,7 @@ namespace webapp.Services
         private readonly MemoryCache versionCache;
         private readonly AsyncLazy<JObject> packageJson;
         private readonly AsyncLazy<List<NPMExternal>> externals;
+        private Dictionary<string, string> externalVersions = new Dictionary<string, string>();
 
         public NPMManagerService(IHostingEnvironment env)
         {
@@ -48,13 +49,15 @@ namespace webapp.Services
             {
                 SizeLimit = 1024
             });
-
-            // TODO - we need to wait for this (dependency injection?)
-            InitializePackageVersions();
         }
 
-        private async void InitializePackageVersions()
+        public async Task InitializePackageVersions()
         {
+            // build external version list based on package.json <key -> version>
+            JObject npmPackageObject = await packageJson;
+            externalVersions = (await externals).Select(external => new { external.Key, Version = GetSemanticVersion(external.Package, npmPackageObject) })
+                .ToDictionary(externalToVersion => externalToVersion.Key, externalToVersion => externalToVersion.Version);
+
             // TODO - update to use RX extensions
             // cache the package versions for each of our externals
             var versions = (await externals).Select(external => GetVersion(external.Package));
@@ -90,6 +93,11 @@ namespace webapp.Services
                 String registryBody = await client.GetStringAsync($"{registryBaseUrl}{package}");
                 return JObject.Parse(registryBody);
             }
+        }
+
+        public async Task<string> GetNPMModule(NPMExternal external, string productionAsset, string developmentAsset)
+        {
+            return await GetNPMModule(external.Package, externalVersions[external.Key], productionAsset, developmentAsset);
         }
 
         public async Task<string> GetNPMModule(string package, string semanticVersion, string productionAsset, string developmentAsset = null)

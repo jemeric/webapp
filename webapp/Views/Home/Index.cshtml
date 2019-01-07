@@ -23,7 +23,7 @@
     {
         @foreach(var asset in external.Assets)
         {
-            <script src="@npmManager.GetModuleUrl(external.Package, null, asset.ProductionPath, asset.DevelopmentPath)"></script>
+            <script src="@npmManager.GetNPMModule(external, asset.ProductionPath, asset.DevelopmentPath)"></script>
         }
     }
 

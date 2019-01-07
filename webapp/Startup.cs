@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using webapp.Services;
+using webapp.Services.Initialization;
 
 namespace webapp
 {
@@ -25,6 +26,15 @@ namespace webapp
 
             // setup dependencies for injection here
             services.AddSingleton<NPMManagerService>();
+            // TODO - this could be broken into multiple initializers if it becomes more complex
+            // may need to be run in parallel - https://github.com/thomaslevesque/AspNetCore.AsyncInitialization/issues/8 
+            services.AddAsyncInitializer<WebAppInitializer>();
+            //services.AddSingleton<NPMManagerService>((ctx) =>
+            //{
+            //    // example using provider (implementationFactory)
+            //    IHostingEnvironment env = ctx.GetService<IHostingEnvironment>();
+            //    return await NPMManagerService.BuildNPMManagerService(env);
+            //});
 
         }
 
