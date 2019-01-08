@@ -30,7 +30,7 @@
                 }
             },
             "additionalProperties": false,
-            "required": [ "key", "package" ]
+            "required": [ "module", "global" ]
         },
         "externalAsset": {
             "type": "object",

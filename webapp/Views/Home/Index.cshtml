@@ -1,5 +1,4 @@
-﻿@using webapp.Services;
-@inject NPMManagerService npmManager;
+﻿@model string[]
 @{
     ViewData["Title"] = "Index";
 }
@@ -14,17 +13,11 @@
 <body>
     <div id="example" asp-prerender-module="ClientApp/dist/main-server"></div>
 
-    <!-- Dependencies -->
-    <!-- TODO - introspect package.json and dynamically load the version via cdn -->
-    <script src="@npmManager.GetModuleUrl("react", "16.4.2", "umd/react.production.min.js", "umd/react.development.js")"></script>
-    <script src="@npmManager.GetModuleUrl("react-dom", "16.4.2", "umd/react-dom.production.min.js", "umd/react-dom.development.js")"></script>
-
-    @foreach (var external in await npmManager.GetExternals())
+    <!-- External Dependencies -->
+    <!-- introspect package.json and dynamically load the version via cdn -->
+    @foreach (var url in Model)
     {
-        @foreach(var asset in external.Assets)
-        {
-            <script src="@npmManager.GetNPMModule(external, asset.ProductionPath, asset.DevelopmentPath)"></script>
-        }
+        <script src="@url"></script>
     }
 
     <!-- Main -->

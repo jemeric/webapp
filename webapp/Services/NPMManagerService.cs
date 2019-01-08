@@ -80,6 +80,8 @@ namespace webapp.Services
             return versionCache.GetOrCreateAsync<string>($"{package}@{semanticVersionOrTag}", async (entry) =>
             {
                 // TODO - expire cache - pending https://github.com/aspnet/Extensions/issues/769
+                // must set size with size limit - https://docs.microsoft.com/en-us/aspnet/core/performance/caching/memory?view=aspnetcore-2.2#use-setsize-size-and-sizelimit-to-limit-cache-size
+                entry.SetSize(1);
                 JObject registryObj = await GetRegistry(package);
                 return GetMaxVersion(semanticVersionOrTag, registryObj);
             });
@@ -90,7 +92,6 @@ namespace webapp.Services
             using(HttpClient client = new HttpClient())
             {
                 // TODO update to use caching + streaming
-                var test = $"{registryBaseUrl}{package}";
                 String registryBody = await client.GetStringAsync($"{registryBaseUrl}{package}");
                 return JObject.Parse(registryBody);
             }
@@ -98,7 +99,7 @@ namespace webapp.Services
 
         public async Task<string> GetNPMModule(NPMExternal external, string productionAsset, string developmentAsset)
         {
-            return await GetNPMModule(external.Module, externalVersions[external.Global], productionAsset, developmentAsset);
+            return await GetNPMModule(external.Module, externalVersions[external.Module], productionAsset, developmentAsset);
         }
 
         public async Task<string> GetNPMModule(string package, string semanticVersion, string productionAsset, string developmentAsset = null)
