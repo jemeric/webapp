@@ -14,15 +14,14 @@ namespace webapp
     {
         public static async Task Main(string[] args)
         {
-            IWebHost webHost = BuildWebHost(args);
+            IWebHost webHost = BuildWebHost(args).Build();
             /* perform initialization here - see https://www.thomaslevesque.com/2018/09/25/asynchronous-initialization-in-asp-net-core-revisited/ */
             await webHost.InitAsync();
             webHost.Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
+        public static IWebHostBuilder BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .Build();
+                .UseStartup<Startup>();
     }
 }
