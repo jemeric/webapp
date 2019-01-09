@@ -23,10 +23,7 @@ namespace webapp.Controllers
             List<Task<string>> externalModulePaths = new List<Task<string>>();
             foreach(NPMExternal external in externals)
             {
-                foreach(NPMAsset asset in external.Assets)
-                {
-                    externalModulePaths.Add(npmManagerService.GetNPMModule(external, asset.ProductionPath, asset.DevelopmentPath));
-                }
+                externalModulePaths.AddRange(external.Assets.Select(asset => npmManagerService.GetNPMModule(external, asset.ProductionPath, asset.DevelopmentPath)));
             }
             return View(await Task.WhenAll(externalModulePaths));
         }
