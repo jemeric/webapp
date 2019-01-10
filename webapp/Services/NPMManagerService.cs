@@ -108,7 +108,7 @@ namespace webapp.Services
             return GetModuleUrl(package, version, productionAsset, developmentAsset);
         }
 
-        public string GetModuleUrl(string package, string version, string productionAsset, string developmentAsset = null)
+        private string GetModuleUrl(string package, string version, string productionAsset, string developmentAsset = null)
         {
             // TODO automatically get version from package.json
             string asset = env.IsProduction() ? 
