@@ -7,9 +7,14 @@
         "noEmitOnError": true,
         "removeComments": false,
         "sourceMap": true,
-        "lib": ["es6", "dom"],
+        "lib": [ "es6", "dom" ],
         "target": "es5",
-        "jsx": "react"
+        "jsx": "react",
+        "plugins": [
+            {
+                "name": "typescript-styled-plugin"
+            }
+        ]
     },
     "exclude": [
         "node_modules",

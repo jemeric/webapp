@@ -19,11 +19,23 @@ module.exports = (env) => {
             publicPath: "dist/" // - Needed for server side and client-side path  Webpack dev middleware, if enabled, handles requests for this URL prefix
         },
         module: {
+            //rules: [
+            //    // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
+            //    { test: /\.tsx?$/, loader: "awesome-typescript-loader" },
+            //    // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
+            //    { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
+            //]
+            // UPDATED to use babel for typescript instead (see https://medium.com/@francesco.agnoletto/how-to-set-up-typescript-with-babel-and-webpack-6fba1b6e72d5)
             rules: [
-                // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
-                { test: /\.tsx?$/, loader: "awesome-typescript-loader" },
-                // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
-                { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
+                {
+                    test: /\.tsx?$/,
+                    loader: "babel-loader",
+                },
+                {
+                    test: /\.js$/,
+                    use: ["source-map-loader"],
+                    enforce: "pre"
+                }
             ]
         },
         // issue in SpaServices mean this is needed even if it is empty
