@@ -11,7 +11,7 @@
     <link rel="stylesheet" type="text/css" href="/dist/style.css">
 </head>
 <body>
-    <div id="example" asp-prerender-module="ClientApp/dist/main-server"></div>
+    <div asp-prerender-module="ClientApp/dist/main-server" asp-prerender-data=@Model></div>
 
     <!-- External Dependencies -->
     <!-- introspect package.json and dynamically load the version via cdn -->
