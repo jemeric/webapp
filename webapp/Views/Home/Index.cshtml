@@ -1,27 +1,3 @@
 ﻿@model string[]
-@{
-    ViewData["Title"] = "Index";
-}
-
 <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8" />
-    <title>Hello React!</title>
-    <link rel="stylesheet" type="text/css" href="/dist/style.css">
-</head>
-<body>
-    <div asp-prerender-module="ClientApp/dist/main-server" asp-prerender-data=@Model></div>
-
-    <!-- External Dependencies -->
-    <!-- introspect package.json and dynamically load the version via cdn -->
-    @foreach (var url in Model)
-    {
-        <script src="@url"></script>
-    }
-
-    <!-- Main -->
-    <script src="~/dist/main-client.js"></script>
-</body>
-</html>
-
+<html asp-prerender-module="ClientApp/dist/main-server" asp-prerender-data=@Model><body></body></html>
