@@ -51,8 +51,10 @@ namespace webapp
                 // browser is guaranteed to receive up-to-date build output
                 // instance of webpack stays active and has partial compilation states pre-cached in memory
                 // requires aspnet-webpack
+                // change project path so webpack middleware knows where to look
                 app.UseWebpackDevMiddleware(new Microsoft.AspNetCore.SpaServices.Webpack.WebpackDevMiddlewareOptions
                 {
+                    ProjectPath = Path.Combine(Directory.GetCurrentDirectory(), "ClientApp"),                   
                     HotModuleReplacement = true,
                     ReactHotModuleReplacement = true
                 });

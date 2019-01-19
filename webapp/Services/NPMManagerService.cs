@@ -32,7 +32,7 @@ namespace webapp.Services
             // see "cached values" http://blog.stephencleary.com/2013/01/async-oop-3-properties.html
             packageJson = new AsyncLazy<JObject>(async () =>
             {
-                return await Task.Run<JObject>(() => JObject.Parse(File.ReadAllText($"{env.ContentRootPath}/package.json")));
+                return await Task.Run<JObject>(() => JObject.Parse(File.ReadAllText($"{env.ContentRootPath}/ClientApp/package.json")));
             });
             packageJson.Start();
             externals = new AsyncLazy<List<NPMExternal>>(async () =>

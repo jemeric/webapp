@@ -1,4 +1,4 @@
-﻿const NPMExternals = require('./Assets/Json/NPMExternals.json');
+﻿const NPMExternals = require('../Assets/Json/NPMExternals.json');
 const path = require("path");
 const merge = require("webpack-merge");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -44,9 +44,9 @@ module.exports = (env) => {
     });
 
     const clientBundleConfig = merge(sharedConfig(), {
-        entry: { "main-client": "./ClientApp/boot-client.tsx" },
+        entry: { "main-client": "./boot-client.tsx" },
         output: {
-            path: path.join(__dirname, "./wwwroot/dist")
+            path: path.join(__dirname, "../wwwroot/dist")
         },
         module: {
             rules: [
@@ -76,9 +76,9 @@ module.exports = (env) => {
     });
 
     const serverBundleConfig = merge(sharedConfig(), {
-        entry: { "main-server": "./ClientApp/boot-server.tsx" },
+        entry: { "main-server": "./boot-server.tsx" },
         output: {
-            path: path.join(__dirname, "./ClientApp/dist"),
+            path: path.join(__dirname, "./dist"),
             libraryTarget: "commonjs" // get missing default error without this
         },
 

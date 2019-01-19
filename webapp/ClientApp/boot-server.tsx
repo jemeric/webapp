@@ -6,6 +6,7 @@ import { App } from './components/App';
 import { ServerStyleSheet } from 'styled-components';
 
 
+// todo isolate and cache server-side template for easier development
 function getTemplate(app: string, styles: string, scripts: string[]) : string {
     return `<head>
                 <meta charset="UTF-8" />
