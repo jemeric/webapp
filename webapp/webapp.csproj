@@ -14,13 +14,14 @@
   <ItemGroup>
     <None Remove="ClientApp\boot-client.tsx" />
     <None Remove="ClientApp\boot-server.tsx" />
-    <None Remove="ClientApp\components\App.tsx" />
+    <None Remove="ClientApp\src\components\App.tsx" />
     <None Remove="ClientApp\index.tsx" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Assets\Images\" />
     <Folder Include="ClientApp\dist\" />
+    <Folder Include="ClientApp\public\" />
     <Folder Include="wwwroot\dist\" />
   </ItemGroup>
 
@@ -35,10 +36,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="ClientApp\boot-client.tsx" />
-    <TypeScriptCompile Include="ClientApp\boot-server.tsx" />
-    <TypeScriptCompile Include="ClientApp\components\App.tsx" />
-    <TypeScriptCompile Include="ClientApp\index.tsx" />
+    <TypeScriptCompile Include="ClientApp\src\boot-client.tsx" />
+    <TypeScriptCompile Include="ClientApp\src\boot-server.tsx" />
+    <TypeScriptCompile Include="ClientApp\src\components\App.tsx" />
+    <TypeScriptCompile Include="ClientApp\src\index.tsx" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,18 @@
+﻿/* @import "~bootstrap/scss/bootstrap"; */
+/* tilda points to the node modules folder */
+
+@import "./navigation/Backdrop/Backdrop.scss";
+@import "./navigation/SideDrawer/DrawerToggleButton.scss";
+@import "./navigation/SideDrawer/SideDrawer.scss";
+@import "./navigation/Toolbar/Toolbar.scss";
+
+html {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    height: 100%;
+}

@@ -44,7 +44,7 @@ module.exports = (env) => {
     });
 
     const clientBundleConfig = merge(sharedConfig(), {
-        entry: { "main-client": "./boot-client.tsx" },
+        entry: { "main-client": "./src/boot-client.tsx" },
         output: {
             path: path.join(__dirname, "../wwwroot/dist")
         },
@@ -76,7 +76,7 @@ module.exports = (env) => {
     });
 
     const serverBundleConfig = merge(sharedConfig(), {
-        entry: { "main-server": "./boot-server.tsx" },
+        entry: { "main-server": "./src/boot-server.tsx" },
         output: {
             path: path.join(__dirname, "./dist"),
             libraryTarget: "commonjs" // get missing default error without this
