@@ -29,7 +29,7 @@ module.exports = (env) => {
             rules: [
                 {
                     test: /\.tsx?$/,
-                    loader: "babel-loader",
+                    loader: "babel-loader"
                 },
                 {
                     test: /\.js$/,
