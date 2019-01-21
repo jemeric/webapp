@@ -5,7 +5,8 @@
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "build": "webpack"
+        "build": "webpack",
+        "lint": "tslint 'components/**/*.{ts,tsx}'"
     },
     "babel": {
         "presets": [
@@ -38,6 +39,7 @@
         "@types/styled-components": "4.1.5",
         "@types/webpack": "4.4.11",
         "@types/webpack-env": "1.13.6",
+        "typescript": "3.2.4",
         "aspnet-prerendering": "^3.0.1",
         "aspnet-webpack": "3.0.0",
         "aspnet-webpack-react": "3.0.0",
@@ -61,6 +63,11 @@
         "webpack-cli": "^3.2.1",
         "webpack-dev-middleware": "3.2.0",
         "webpack-hot-middleware": "2.23.0",
-        "webpack-merge": "4.1.4"
+        "webpack-merge": "4.1.4",
+        "tslint": "5.12.1",
+        "prettier": "1.16.0",
+        "tslint-config-prettier": "1.17.0",
+        "tslint-config-standard": "8.0.1",
+        "tslint-react": "3.6.0"
     }
 }

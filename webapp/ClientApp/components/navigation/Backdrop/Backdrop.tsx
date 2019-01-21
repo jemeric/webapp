@@ -1,11 +1,11 @@
-import * as React from 'react';
+import * as React from "react";
 
-interface BackdropProps {
-    click: () => void;
+interface IBackdropProps {
+  click: () => void;
 }
 
-const Backdrop: React.SFC<BackdropProps> = (props)  => (
-    <div className="backdrop" onClick={props.click}></div>
+const Backdrop: React.SFC<IBackdropProps> = props => (
+  <div className="backdrop" onClick={props.click} />
 );
 
 export default Backdrop;
