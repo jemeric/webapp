@@ -44,7 +44,7 @@ module.exports = (env) => {
     });
 
     const clientBundleConfig = merge(sharedConfig(), {
-        entry: { "main-client": "./src/boot-client.tsx" },
+        entry: { "main-client": "./src/index.tsx" },
         output: {
             path: path.join(__dirname, "./wwwroot/dist")
         },

@@ -59,12 +59,12 @@ namespace webapp
                 // instance of webpack stays active and has partial compilation states pre-cached in memory
                 // requires aspnet-webpack
                 // change project path so webpack middleware knows where to look
-                app.UseWebpackDevMiddleware(new Microsoft.AspNetCore.SpaServices.Webpack.WebpackDevMiddlewareOptions
-                {
-                    ProjectPath = Path.Combine(Directory.GetCurrentDirectory(), "ClientApp"),                   
-                    HotModuleReplacement = true,
-                    ReactHotModuleReplacement = true
-                });
+                //app.UseWebpackDevMiddleware(new Microsoft.AspNetCore.SpaServices.Webpack.WebpackDevMiddlewareOptions
+                //{
+                //    ProjectPath = Path.Combine(Directory.GetCurrentDirectory(), "ClientApp"),                   
+                //    HotModuleReplacement = true,
+                //    ReactHotModuleReplacement = true
+                //});
             }
 
             //app.UseMvc(routes =>
@@ -82,20 +82,21 @@ namespace webapp
             {
                 spa.Options.SourcePath = "ClientApp";
 
-                spa.UseSpaPrerendering(config =>
-                {
-                    config.BootModulePath = $"{spa.Options.SourcePath}/dist/main-server";
-                    config.SupplyData = async (context, data) =>
-                    {
-                        List<NPMExternal> externals = await npmManagerService.GetExternals();
-                        List<Task<string>> externalModulePaths = new List<Task<string>>();
-                        foreach (NPMExternal external in externals)
-                        {
-                            externalModulePaths.AddRange(external.Assets.Select(asset => npmManagerService.GetNPMModule(external, asset.ProductionPath, asset.DevelopmentPath)));
-                        }
-                        data["externals"] = await Task.WhenAll(externalModulePaths);
-                    };
-                });
+                // Abandoning this until the CRA (Create-React-App) supports server-side rendering (SSR)
+                //spa.UseSpaPrerendering(config =>
+                //{
+                //    config.BootModulePath = $"{spa.Options.SourcePath}/dist/main-server";
+                //    config.SupplyData = async (context, data) =>
+                //    {
+                //        List<NPMExternal> externals = await npmManagerService.GetExternals();
+                //        List<Task<string>> externalModulePaths = new List<Task<string>>();
+                //        foreach (NPMExternal external in externals)
+                //        {
+                //            externalModulePaths.AddRange(external.Assets.Select(asset => npmManagerService.GetNPMModule(external, asset.ProductionPath, asset.DevelopmentPath)));
+                //        }
+                //        data["externals"] = await Task.WhenAll(externalModulePaths);
+                //    };
+                //});
 
                 if (env.IsDevelopment())
                 {
