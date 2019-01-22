@@ -8,8 +8,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using webapp.Services;
 using webapp.Services.Initialization;
+using webapp.Util.Dto;
 
 namespace webapp
 {
@@ -35,11 +37,16 @@ namespace webapp
             //    IHostingEnvironment env = ctx.GetService<IHostingEnvironment>();
             //    return await NPMManagerService.BuildNPMManagerService(env);
             //});
+            // In production, the React files will be served from this directory
+            services.AddSpaStaticFiles(config =>
+            {
+                config.RootPath = "ClientApp/dist";
+            });
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, NPMManagerService npmManagerService)
         {
             app.UseStaticFiles(); // allow reference to static files in wwwroot
 
@@ -60,15 +67,41 @@ namespace webapp
                 });
             }
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}");
+            //app.UseMvc(routes =>
+            //{
+            //    routes.MapRoute(
+            //        name: "default",
+            //        template: "{controller=Home}/{action=Index}");
 
-                routes.MapSpaFallbackRoute(
-                    name: "spa-fallback",
-                    defaults: new { controller = "Home", action = "Index" });
+            //    routes.MapSpaFallbackRoute(
+            //        name: "spa-fallback",
+            //        defaults: new { controller = "Home", action = "Index" });
+            //});
+
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "ClientApp";
+
+                spa.UseSpaPrerendering(config =>
+                {
+                    config.BootModulePath = $"{spa.Options.SourcePath}/dist/main-server";
+                    config.SupplyData = async (context, data) =>
+                    {
+                        List<NPMExternal> externals = await npmManagerService.GetExternals();
+                        List<Task<string>> externalModulePaths = new List<Task<string>>();
+                        foreach (NPMExternal external in externals)
+                        {
+                            externalModulePaths.AddRange(external.Assets.Select(asset => npmManagerService.GetNPMModule(external, asset.ProductionPath, asset.DevelopmentPath)));
+                        }
+                        data["externals"] = await Task.WhenAll(externalModulePaths);
+                    };
+                });
+
+                if (env.IsDevelopment())
+                {
+                    spa.UseReactDevelopmentServer(npmScript: "start");
+                }
+
             });
         }
 

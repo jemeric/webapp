@@ -1,26 +1,41 @@
 {
-    "compilerOptions": {
-        "outDir": "./wwwroot/dist/",
-        "noImplicitAny": true,
-        "module": "commonjs",
-        "moduleResolution": "node",
-        "noEmitOnError": true,
-        "strictFunctionTypes": true,
-        "alwaysStrict": true,
-        "noImplicitThis": true,
-        "removeComments": false,
-        "sourceMap": true,
-        "lib": [ "es6", "dom" ],
-        "target": "es5",
-        "jsx": "react",
-        "plugins": [
-            {
-                "name": "typescript-styled-plugin"
-            }
-        ]
-    },
-    "exclude": [
-        "node_modules",
-        "wwwroot"
-    ]
+  "compilerOptions": {
+    "outDir": "./wwwroot/dist/",
+    "noImplicitAny": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noEmitOnError": true,
+    "strictFunctionTypes": true,
+    "alwaysStrict": true,
+    "noImplicitThis": true,
+    "removeComments": false,
+    "sourceMap": true,
+    "lib": [
+      "es6",
+      "dom"
+    ],
+    "target": "es5",
+    "jsx": "preserve",
+    "plugins": [
+      {
+        "name": "typescript-styled-plugin"
+      }
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true
+  },
+  "exclude": [
+    "node_modules",
+    "wwwroot"
+  ],
+  "include": [
+    "src"
+  ]
 }
