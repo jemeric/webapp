@@ -54,7 +54,7 @@ namespace webapp
                 // change project path so webpack middleware knows where to look
                 app.UseWebpackDevMiddleware(new Microsoft.AspNetCore.SpaServices.Webpack.WebpackDevMiddlewareOptions
                 {
-                    ProjectPath = Path.Combine(Directory.GetCurrentDirectory(), "ClientApp"),                   
+                    ProjectPath = Path.Combine(Directory.GetCurrentDirectory(), "ClientApp"),
                     HotModuleReplacement = true,
                     ReactHotModuleReplacement = true
                 });
