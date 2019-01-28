@@ -64,7 +64,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "01307a6cc2aada1b9734";
+/******/ 	var hotCurrentHash = "8136028ba15342186c49";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -1753,9 +1753,9 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
   !*** ./src/components/app.scss ***!
   \*********************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-eval("throw new Error(\"Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\\nModuleBuildError: Module build failed (from ./node_modules/sass-loader/lib/loader.js):\\nError: Missing binding /app/ClientApp/node_modules/node-sass/vendor/linux-x64-48/binding.node\\nNode Sass could not find a binding for your current environment: Linux 64-bit with Node.js 6.x\\n\\nFound bindings for the following environments:\\n  - Windows 64-bit with Node.js 8.x\\n\\nThis usually happens because your environment has changed since running `npm install`.\\nRun `npm rebuild node-sass` to download the binding for your current environment.\\n    at module.exports (/app/ClientApp/node_modules/node-sass/lib/binding.js:15:13)\\n    at Object.<anonymous> (/app/ClientApp/node_modules/node-sass/lib/index.js:14:35)\\n    at Module._compile (module.js:577:32)\\n    at Object.Module._extensions..js (module.js:586:10)\\n    at Module.load (module.js:494:32)\\n    at tryModuleLoad (module.js:453:12)\\n    at Function.Module._load (module.js:445:3)\\n    at Module.require (module.js:504:17)\\n    at require (internal/module.js:20:19)\\n    at Object.sassLoader (/app/ClientApp/node_modules/sass-loader/lib/loader.js:46:72)\\n    at runLoaders (/app/ClientApp/node_modules/webpack/lib/NormalModule.js:286:20)\\n    at /app/ClientApp/node_modules/loader-runner/lib/LoaderRunner.js:367:11\\n    at /app/ClientApp/node_modules/loader-runner/lib/LoaderRunner.js:233:18\\n    at runSyncOrAsync (/app/ClientApp/node_modules/loader-runner/lib/LoaderRunner.js:143:3)\\n    at iterateNormalLoaders (/app/ClientApp/node_modules/loader-runner/lib/LoaderRunner.js:232:2)\\n    at Array.<anonymous> (/app/ClientApp/node_modules/loader-runner/lib/LoaderRunner.js:205:4)\\n    at Storage.finished (/app/ClientApp/node_modules/enhanced-resolve/lib/CachedInputFileSystem.js:43:16)\\n    at provider (/app/ClientApp/node_modules/enhanced-resolve/lib/CachedInputFileSystem.js:79:9)\\n    at /app/ClientApp/node_modules/graceful-fs/graceful-fs.js:90:16\\n    at FSReqWrap.readFileAfterClose [as oncomplete] (fs.js:447:3)\");\n\n//# sourceURL=webpack:///./src/components/app.scss?");
+eval("// extracted by mini-css-extract-plugin\n\n//# sourceURL=webpack:///./src/components/app.scss?");
 
 /***/ }),
 
