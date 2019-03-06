@@ -7,10 +7,11 @@
 	<LangVersion>7.3</LangVersion>
 	<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 	<UserSecretsId>49f16f94-862f-4d09-83eb-2486be300a63</UserSecretsId>
+	<DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <WarningLevel>2</WarningLevel>
+    <WarningLevel>3</WarningLevel>
   </PropertyGroup>
 
   <ItemGroup>

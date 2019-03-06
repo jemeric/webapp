@@ -1,0 +1,84 @@
+# to build: docker build -f "webapp/Dockerfile" -t webapp:test --target base "webapp"
+# to run
+
+# -v = Bind mount volume (perhaps not mounting webapp to app won't overwrite node modules?)
+
+FROM microsoft/dotnet:2.2-aspnetcore-runtime AS base
+WORKDIR /app
+# Setup NodeJs
+RUN apt-get update && \
+    apt-get install -y wget && \
+    apt-get install -y gnupg2 && \
+    wget -qO- https://deb.nodesource.com/setup_8.x | bash - && \
+    apt-get install -y build-essential nodejs
+# End setup
+EXPOSE 80
+EXPOSE 443
+ENV ASPNETCORE_URLS http://*:80
+
+FROM microsoft/dotnet:2.2-sdk AS build
+WORKDIR /src
+COPY ["webapp/webapp.csproj", "webapp/"]
+RUN dotnet restore "webapp/webapp.csproj"
+COPY . .
+WORKDIR /src/webapp
+# TODO - build for linux system (to fix sass problem? debian.9-x64)
+RUN dotnet build "webapp.csproj" -c Release -o /app
+
+FROM build AS publish
+RUN dotnet publish "webapp.csproj" -c Release -o /app
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app .
+ENTRYPOINT ["dotnet", "webapp.dll"]
+
+# SIMPLE WORKING EXAMPLE -
+# RUN WITH docker run -p 6000:5000 -p 6001:5001 --name testapp webapp2
+# FROM microsoft/dotnet:latest
+# COPY . /app
+# WORKDIR /app
+# RUN dotnet restore
+# RUN dotnet build
+# RUN apt-get update && \
+#     apt-get install -y wget && \
+#     apt-get install -y gnupg2 && \
+#     wget -qO- https://deb.nodesource.com/setup_8.x | bash - && \
+#     apt-get install -y build-essential nodejs
+# WORKDIR /app/ClientApp
+# RUN npm rebuild node-sass --force
+# WORKDIR /app
+# # expose instruction does not actually publish port - functions as documentation between image builder + runner of container
+# EXPOSE 80 443
+# ENTRYPOINT ["dotnet", "run", "-no-restor", "--urls", "https://0.0.0.0:5000;http://0.0.0.0:5001"]
+
+
+
+# FROM microsoft/dotnet:2.2-sdk-alpine AS build
+# WORKDIR /app
+
+# # copy csproj and restore as distinct layers
+# COPY webapp/*.csproj ./webapp/
+# #COPY utils/*.csproj ./utils/
+# WORKDIR /app/dotnetapp
+# RUN dotnet restore
+
+# # copy and publish app and libraries
+# WORKDIR /app/
+# COPY webapp/. ./webapp/
+# #COPY utils/. ./utils/
+# WORKDIR /app/webapp
+# RUN dotnet publish -c Release -o out
+
+
+# # test application -- see: dotnet-docker-unit-testing.md
+# # FROM build AS testrunner
+# # WORKDIR /app/tests
+# # COPY tests/. .
+# # ENTRYPOINT ["dotnet", "test", "--logger:trx"]
+
+
+# FROM microsoft/dotnet:2.2-runtime-alpine AS runtime
+# WORKDIR /app
+# COPY --from=build /app/webapp/out ./
+# ENTRYPOINT ["dotnet", "webapp.dll"]
