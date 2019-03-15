@@ -46,4 +46,8 @@
     <TypeScriptCompile Include="ClientApp\src\index.tsx" />
   </ItemGroup>
 
+  <Target Name="CopyCustomContentOnPublish" AfterTargets="Publish">
+    <Copy SourceFiles="ClientApp\dist\main-server.js" DestinationFolder="$(PublishDir)\ClientApp\dist\" />
+  </Target>
+
 </Project>

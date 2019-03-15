@@ -38,41 +38,56 @@
 
 # MINIMIZED
 
-FROM microsoft/dotnet:2.2-sdk-alpine AS build
-WORKDIR /src
-COPY webapp.csproj webapp/
-RUN dotnet restore ./webapp/webapp.csproj
-WORKDIR /src/webapp
-COPY . .
-RUN dotnet build webapp.csproj -c Release -o /app
+# FROM microsoft/dotnet:2.2-sdk-alpine AS build
+# WORKDIR /src
+# COPY webapp.csproj webapp/
+# RUN dotnet restore ./webapp/webapp.csproj
+# WORKDIR /src/webapp
+# COPY . .
+# RUN dotnet build webapp.csproj -c Release -o /app
+
+# FROM build AS publish
+# WORKDIR /src/webapp
+# RUN dotnet add package ILLink.Tasks -v 0.1.5-preview-1841731 -s https://dotnet.myget.org/F/dotnet-core/api/v3/index.json
+# RUN dotnet publish webapp.csproj -c Release -o out -r linux-musl-x64 /p:ShowLinkerSizeComparison=true /p:CrossGenDuringPublish=false
 
 
+# FROM microsoft/dotnet:2.2-runtime-deps-alpine AS runtime
+# ENV DOTNET_USE_POLLING_FILE_WATCHER=true
+# WORKDIR /app
+# COPY --from=publish /src/webapp/out ./
+# ENTRYPOINT ["dotnet", "./webapp.dll"]
+
+# FROM LINK - https://github.com/dotnet/dotnet-docker/blob/master/samples/dotnetapp/Dockerfile.alpine-x64-selfcontained
+
+FROM mcr.microsoft.com/dotnet/core/sdk:2.2-alpine AS build
+WORKDIR /app
 
 # copy csproj and restore as distinct layers
-# COPY *.sln .
-# COPY nuget.config . 
-# COPY superzeit/*.csproj ./superzeit/
-# RUN dotnet restore
-# copy everything else and build app
-# COPY . .
-# WORKDIR /app/superzeit
-# RUN dotnet build
- 
-# FROM build AS publish
-# WORKDIR /app/superzeit
-# # add IL Linker package
+COPY webapp.csproj ./webapp/
+# COPY utils/*.csproj ./utils/
+WORKDIR /app/webapp
+RUN dotnet restore
+
+# copy and build app and libraries
+WORKDIR /app/
+COPY . ./webapp/
+# COPY utils/. ./utils/
+WORKDIR /app/webapp
+# add IL Linker package
 # RUN dotnet add package ILLink.Tasks -v 0.1.5-preview-1841731 -s https://dotnet.myget.org/F/dotnet-core/api/v3/index.json
-# RUN dotnet publish -c Release -o out -r linux-musl-x64 /p:ShowLinkerSizeComparison=true
+# RUN dotnet publish -c Release -r linux-musl-x64 -o out /p:ShowLinkerSizeComparison=true /p:CrossGenDuringPublish=false
+RUN dotnet publish -c Release -r linux-musl-x64 -o out 
 
-FROM build AS publish
-WORKDIR /src/webapp
-RUN dotnet add package ILLink.Tasks -v 0.1.5-preview-1841731 -s https://dotnet.myget.org/F/dotnet-core/api/v3/index.json
-RUN dotnet publish webapp.csproj -c Release -o out -r linux-musl-x64 /p:ShowLinkerSizeComparison=true /p:CrossGenDuringPublish=false
+# test application -- see: dotnet-docker-unit-testing.md
+# FROM build AS testrunner
+# WORKDIR /app/tests
+# COPY tests/. .
+# ENTRYPOINT ["dotnet", "test", "--logger:trx"]
 
 
-FROM microsoft/dotnet:2.2-runtime-deps-alpine AS runtime
-ENV DOTNET_USE_POLLING_FILE_WATCHER=true
+FROM mcr.microsoft.com/dotnet/core/runtime-deps:2.2-alpine AS runtime
+RUN apk add nodejs-current
 WORKDIR /app
-COPY --from=publish /src/webapp/out ./
-ENTRYPOINT ["dotnet", "webapp.dll"]
-
+COPY --from=build /app/webapp/out ./
+ENTRYPOINT ["./webapp", "-no-restor", "--urls", "http://0.0.0.0:5001"]
