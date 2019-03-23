@@ -6,6 +6,7 @@
     "start": "react-scripts start",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
+    "build:prod": "webpack -p",
     "lint": "tslint 'components/**/*.{ts,tsx}'"
   },
   "babel": {

@@ -60,6 +60,16 @@
 
 # FROM LINK - https://github.com/dotnet/dotnet-docker/blob/master/samples/dotnetapp/Dockerfile.alpine-x64-selfcontained
 
+# build frontend for production
+FROM mhart/alpine-node:10 as frontend
+WORKDIR /app/Assets
+COPY ./Assets .
+WORKDIR /app/ClientApp
+COPY ./ClientApp .
+RUN npm install
+RUN npm run build:prod
+
+
 FROM mcr.microsoft.com/dotnet/core/sdk:2.2-alpine AS build
 WORKDIR /app
 
@@ -73,7 +83,14 @@ RUN dotnet restore
 WORKDIR /app/
 COPY . ./webapp/
 # COPY utils/. ./utils/
+
+# copy production version of frontend
+WORKDIR /app/webapp/ClientApp
+COPY --from=frontend /app ./
+
 WORKDIR /app/webapp
+
+# TODO - rebuild client-side assets in production mode
 # add IL Linker package
 # RUN dotnet add package ILLink.Tasks -v 0.1.5-preview-1841731 -s https://dotnet.myget.org/F/dotnet-core/api/v3/index.json
 # RUN dotnet publish -c Release -r linux-musl-x64 -o out /p:ShowLinkerSizeComparison=true /p:CrossGenDuringPublish=false
