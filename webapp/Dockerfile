@@ -86,7 +86,9 @@ COPY . ./webapp/
 
 # copy production version of frontend
 WORKDIR /app/webapp/ClientApp
-COPY --from=frontend /app ./
+COPY --from=frontend /app/ClientApp ./
+WORKDIR /app/webapp/wwwroot
+COPY --from=frontend /app/wwwroot ./
 
 WORKDIR /app/webapp
 
@@ -95,13 +97,6 @@ WORKDIR /app/webapp
 # RUN dotnet add package ILLink.Tasks -v 0.1.5-preview-1841731 -s https://dotnet.myget.org/F/dotnet-core/api/v3/index.json
 # RUN dotnet publish -c Release -r linux-musl-x64 -o out /p:ShowLinkerSizeComparison=true /p:CrossGenDuringPublish=false
 RUN dotnet publish -c Release -r linux-musl-x64 -o out 
-
-# test application -- see: dotnet-docker-unit-testing.md
-# FROM build AS testrunner
-# WORKDIR /app/tests
-# COPY tests/. .
-# ENTRYPOINT ["dotnet", "test", "--logger:trx"]
-
 
 FROM mcr.microsoft.com/dotnet/core/runtime-deps:2.2-alpine AS runtime
 RUN apk add nodejs-current
