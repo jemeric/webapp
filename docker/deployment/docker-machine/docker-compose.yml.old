@@ -1,0 +1,10 @@
+version: '3.4'
+services:
+  webapp:
+    build: 
+      context: ../../webapp
+      dockerfile: ../docker/deployment/Dockerfile
+      target: runtime # the stage to build
+    image: jericmason/webapp:prod
+    ports:
+      - "80:5001" # HOST:CONTAINER

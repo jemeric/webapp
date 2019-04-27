@@ -1,0 +1,26 @@
+version: "3.4"
+services:
+  https-portal:
+    image: steveltn/https-portal:1
+    ports:
+      - "80:80"
+      - "443:443"
+    links:
+      - webapp
+    restart: always
+    environment:
+      DOMAINS: "jemml.com -> http://webapp:5001"
+      STAGE: "production"
+      # STAGE: "local"
+      # FORCE_RENEW: "true"
+  webapp:
+    build:
+      context: ../../../webapp
+      dockerfile: ../docker/deployment/Dockerfile
+      target: runtime # the stage to build
+    image: webapp:prod
+    expose:
+      - "5001" # Expose ports without publishing them to host machine - they'll only be accessible to linked services
+    restart: always
+    # ports:
+    #   - "80:5001" # HOST:CONTAINER

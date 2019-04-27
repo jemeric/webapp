@@ -265,3 +265,14 @@ __pycache__/
 
 # Docker Environment Variables
 .env
+secret.tfvars
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+.kubeconfig
+
+# Frontend distribution
+dist/*
