@@ -275,4 +275,4 @@ secret.tfvars
 .kubeconfig
 
 # Frontend distribution
-dist/*
+/webapp/ClientApp/dist
