@@ -54,11 +54,6 @@ resource "kubernetes_service" "webapp_service" {
   }
 }
 
-output "docker-config" {
-  value = "${pathexpand("~/.docker/config.json")}"
-}
-
-
 # create docker secret so we can download from private repository
 resource "kubernetes_secret" "webapp_secret" {
   metadata {
@@ -139,6 +134,7 @@ resource "kubernetes_cluster_role_binding" "tiller_sercice_roll" {
   }
 
   role_ref {
+    api_group = "rbac.authorization.k8s.io"
     name = "cluster-admin"
     kind = "ClusterRole"
   }
