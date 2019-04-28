@@ -5,9 +5,7 @@
     <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
 	<TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
 	<LangVersion>7.3</LangVersion>
-	<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 	<UserSecretsId>49f16f94-862f-4d09-83eb-2486be300a63</UserSecretsId>
-	<DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
