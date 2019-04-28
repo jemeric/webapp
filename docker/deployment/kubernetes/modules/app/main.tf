@@ -14,7 +14,7 @@ resource "kubernetes_service" "webapp_service" {
     port {
       protocol    = "TCP"
       port        = "80"
-      target_port = "${kubernetes_deployment.webapp_deployment.spec.template.spec.container.port.0.container_port}"  # targets TCP port 5001 on any pod with "app={app_label}"
+      target_port = "${var.webapp_container_port}"  # targets TCP port 5001 on any pod with "app={app_label}"
     }
   }
 }

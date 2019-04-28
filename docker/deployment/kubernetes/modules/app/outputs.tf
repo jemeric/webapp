@@ -3,5 +3,5 @@ output "service_name" {
 }
 
 output "service_port" {
-  value = "${kubernetes_service.webapp_service.spec.port.0.port}"
+  value = "${kubernetes_service.webapp_service.spec.0.port.0.port}"
 }
