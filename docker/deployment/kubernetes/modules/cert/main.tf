@@ -10,8 +10,8 @@ resource "null_resource" "certificates" {
   }
 
   provisioner "local-exec" {
-    when = "destroy"
-    command = "echo 'destroy'" # TODO - reverse configuration on destroy (not exactly needed)
+    when    = "destroy"
+    command = "echo 'Certificates CRDs to be destroyed'"
   }
 }
 
@@ -60,13 +60,16 @@ resource "null_resource" "issuer" {
     manifest_sha1 = "${sha1("${data.template_file.issuer.rendered}")}"
   }
 
-  # NOTE - when you add a domain you - accessing from the IP address directly will return a 404
   provisioner "local-exec" {
     #command = "kubectl --kubeconfig ${path.module}/.kubeconfig apply -f -<<EOF\n${data.template_file.ingress.rendered}\nEOF"
     command = "@'\n${data.template_file.issuer.rendered}\n'@ | kubectl --kubeconfig ${var.kube_config_path} create -f -"
 
-    # command = "kubectl --kubeconfig ${path.module}/.kubeconfig apply -f templates/ingress.yaml"
     interpreter = ["PowerShell", "-Command"]
+  }
+
+  provisioner "local-exec" {
+    when    = "destroy"
+    command = "echo 'Certificate issuer to be destroyed'"
   }
 }
 
@@ -80,7 +83,7 @@ data "template_file" "ingress_issuer" {
     ISSUER_NAME    = "${var.issuer_name}"
     HOSTNAME       = "${var.cluster_domain}"
     SERVICENAME    = "${var.service_name}"
-    SERVICEPORT    = "80"
+    SERVICEPORT    = "${var.service_port}"
   }
 }
 
@@ -99,5 +102,10 @@ resource "null_resource" "ingress_issuer" {
 
     # command = "kubectl --kubeconfig ${path.module}/.kubeconfig apply -f templates/ingress.yaml"
     interpreter = ["PowerShell", "-Command"]
+  }
+
+  provisioner "local-exec" {
+    when    = "destroy"
+    command = "echo 'Certificate issuer ingress config to be destroyed'"
   }
 }

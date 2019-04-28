@@ -36,6 +36,9 @@ resource "local_file" "kubeconfig" {
 
 module "application" {
   source = "./modules/app"
+  webapp_image = "${var.webapp_image}"
+  webapp_container_port = "${var.webapp_container_port}"
+  pod_replicas = "${var.pod_replicas}"
 }
 
 provider "helm" {
@@ -51,6 +54,7 @@ module "network" {
   source = "./modules/ingress"
   kube_config_path = "${local_file.kubeconfig.filename}"
   service_name = "${module.application.service_name}"
+  service_port = "${module.application.service_port}"
   cluster_domain = "${var.cluster_domain}"
   issuer_name = "${var.issuer_name}"
   issuer_server = "${var.issuer_server}"
@@ -62,6 +66,7 @@ module "certificates" {
   source = "./modules/cert"
   kube_config_path = "${local_file.kubeconfig.filename}"
   service_name = "${module.application.service_name}"
+  service_port = "${module.application.service_port}"
   cluster_domain = "${var.cluster_domain}"
   issuer_name = "${var.issuer_name}"
   issuer_server = "${var.issuer_server}"

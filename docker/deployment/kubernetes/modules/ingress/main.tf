@@ -19,8 +19,8 @@ resource "kubernetes_cluster_role_binding" "tiller_sercice_roll" {
 
   role_ref {
     api_group = "rbac.authorization.k8s.io"
-    name = "cluster-admin"
-    kind = "ClusterRole"
+    name      = "cluster-admin"
+    kind      = "ClusterRole"
   }
 
   subject {
@@ -45,10 +45,6 @@ data "kubernetes_service" "webapp_loadbalancer" {
   metadata {
     name = "webappload-balancer-nginx-ingress-controller"
   }
-}
-
-output "loadbalancer_ip" {
-  value = "${data.kubernetes_service.webapp_loadbalancer.load_balancer_ingress.0.ip}"
 }
 
 resource "digitalocean_domain" "default" {
@@ -93,7 +89,7 @@ data "template_file" "ingress" {
     ISSUER_NAME    = "${var.issuer_name}"
     HOSTNAME       = "${var.cluster_domain}"
     SERVICENAME    = "${var.service_name}"
-    SERVICEPORT    = "80"
+    SERVICEPORT    = "${var.service_port}"
   }
 }
 
@@ -104,18 +100,22 @@ resource "null_resource" "ingress" {
     manifest_sha1 = "${sha1("${data.template_file.ingress.rendered}")}"
   }
 
-  # NOTE - when you add a domain you - accessing from the IP address directly will return a 404
+  # NOTE - when you add a domain you - accessing from the load balancer IP address directly will return a 404
   provisioner "local-exec" {
     #command = "kubectl --kubeconfig ${path.module}/.kubeconfig apply -f -<<EOF\n${data.template_file.ingress.rendered}\nEOF"
     # Run "Set-Service ssh-agent -StartupType Manual" before using Powershell
     command = "@'\n${data.template_file.ingress.rendered}\n'@ | kubectl --kubeconfig ${var.kube_config_path} apply -f -"
 
-    # command = "kubectl --kubeconfig ${path.module}/.kubeconfig apply -f templates/ingress.yaml"
     interpreter = ["PowerShell", "-Command"]
+  }
+
+  provisioner "local-exec" {
+    when    = "destroy"
+    command = "echo 'Ingress config to be destroyed'"
   }
 }
 
+# This is just here to force the certificate setup to wait on ingress (won't be needed)
 resource "null_resource" "noop" {
   depends_on = ["null_resource.ingress"]
 }
-

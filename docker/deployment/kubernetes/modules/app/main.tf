@@ -14,7 +14,7 @@ resource "kubernetes_service" "webapp_service" {
     port {
       protocol    = "TCP"
       port        = "80"
-      target_port = 5001  # targets TCP port 5001 on any pod with "app={app_label}"
+      target_port = "${kubernetes_deployment.webapp_deployment.spec.template.spec.container.port.0.container_port}"  # targets TCP port 5001 on any pod with "app={app_label}"
     }
   }
 }
@@ -44,7 +44,7 @@ resource "kubernetes_deployment" "webapp_deployment" {
   }
 
   spec {
-    replicas = 3 # create 3 replicated pods
+    replicas = "${var.pod_replicas}" # create 3 replicated pods
 
     selector {
       # defines how the deployment finds which pods to manage (select label that is defined in Pod template, app: webapp)
@@ -64,11 +64,11 @@ resource "kubernetes_deployment" "webapp_deployment" {
         container {
           # indicates containers Pods run in
           #image = "docker.io/jericmason/webapp:prod"
-          image = "docker.io/jericmason/production:private"
+          image = "${var.webapp_image}"
           name  = "webapp"
 
           port {
-            container_port = 5001 # open port so container can send/accept traffic
+            container_port = "${var.webapp_container_port}" # open port so container can send/accept traffic
           }
         }
         image_pull_secrets {

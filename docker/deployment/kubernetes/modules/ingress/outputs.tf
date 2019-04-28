@@ -9,3 +9,7 @@ output "tiller_service_namespace" {
 output "wait_for_ingress" {
   value = "${null_resource.noop.id}"
 }
+
+output "loadbalancer_ip" {
+  value = "${data.kubernetes_service.webapp_loadbalancer.load_balancer_ingress.0.ip}"
+}
