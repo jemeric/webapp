@@ -14,7 +14,9 @@ namespace webapp
     {
         public static async Task Main(string[] args)
         {
-            IWebHost webHost = BuildWebHost(args).Build();
+            IWebHost webHost = BuildWebHost(args)
+                .UseWebRoot("ClientApp/dist")
+                .Build();
             /* perform initialization here - see https://www.thomaslevesque.com/2018/09/25/asynchronous-initialization-in-asp-net-core-revisited/ */
             await webHost.InitAsync();
             webHost.Run();

@@ -6,6 +6,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 module.exports = (env) => {
 
     const isDevBuild = !(env && env.prod);
+    const outputPath = (env && env.outputPath) ? env.outputPath : "./dist";
     const externals = NPMExternals.reduce((obj, cur, i) => (obj[cur.module] = cur.global, obj), {});
 
     const sharedConfig = () => ({
@@ -46,7 +47,8 @@ module.exports = (env) => {
     const clientBundleConfig = merge(sharedConfig(), {
         entry: { "main-client": "./src/boot-client.tsx" },
         output: {
-            path: path.join(__dirname, "../wwwroot/dist")
+            //path: path.join(__dirname, "../wwwroot/dist")
+            path: path.join(__dirname, outputPath)
         },
         module: {
             rules: [
@@ -78,7 +80,7 @@ module.exports = (env) => {
     const serverBundleConfig = merge(sharedConfig(), {
         entry: { "main-server": "./src/boot-server.tsx" },
         output: {
-            path: path.join(__dirname, "./dist"),
+            path: path.join(__dirname, outputPath),
             libraryTarget: "commonjs" // get missing default error without this
         },
 
