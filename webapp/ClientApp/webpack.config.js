@@ -2,6 +2,7 @@
 const path = require("path");
 const merge = require("webpack-merge");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CleanWebpackPlugin = require("clean-webpack-plugin");
 
 module.exports = (env) => {
 
@@ -41,7 +42,9 @@ module.exports = (env) => {
         },
         // issue in SpaServices mean this is needed even if it is empty
         // if not there hot reload can't find updates
-        plugins: []
+        plugins: [
+            new CleanWebpackPlugin() // cleanup files in dist before doing build
+        ]
     });
 
     const clientBundleConfig = merge(sharedConfig(), {
