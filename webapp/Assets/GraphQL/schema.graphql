@@ -1,0 +1,28 @@
+type Query {
+    settings(): Settings!
+}
+
+type Mutation {
+    updateAssetsVersion(assetsVersion: String!) : Assets!
+    # publishes latest if null
+    publishVersion(assetVersion: String) : Assets!
+    removeVersion(assetVersion: String): Assets!
+}
+
+type Settings {
+    assets: Assets!
+}
+
+type Assets {
+    latestVersion: String!
+    publishedVersion: String!
+    instances: [AssetInstance!]
+}
+
+type AssetInstance {
+    address: String!
+    availableVersions: [String!]
+    downloadingVersion: String
+    latestVersion: String
+    publishedVersion: String
+}

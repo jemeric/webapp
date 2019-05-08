@@ -2,13 +2,15 @@
   "name": "deploy-assets",
   "version": "1.0.0",
   "description": "Utility to deploy frontend assets to cloud storage",
-  "main": "deploy.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "gulp": "^4.0.1"
+    "aws-sdk": "^2.447.0",
+    "dotenv": "^8.0.0",
+    "gulp": "^4.0.1",
+    "randomstring": "^1.1.5"
   }
 }

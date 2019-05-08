@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Assets\GraphQL\" />
     <Folder Include="ClientApp\dist\" />
     <Folder Include="ClientApp\public\" />
     <Folder Include="wwwroot\dist\" />
@@ -27,6 +28,7 @@
 
   <ItemGroup>
     <PackageReference Include="AspNetCore.AsyncInitialization" Version="1.1.1" />
+    <PackageReference Include="GraphQL" Version="2.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.2.1" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.0.2105168" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.1" />
