@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using webapp.Services;
 using webapp.Services.Initialization;
+using GraphiQl;
 
 namespace webapp
 {
@@ -59,6 +60,8 @@ namespace webapp
                     ReactHotModuleReplacement = true
                 });
             }
+
+            app.UseGraphiQl();
 
             app.UseMvc(routes =>
             {
