@@ -9,7 +9,6 @@ using GraphQL.Types;
 
 namespace webapp.Controllers
 {
-    [Route("[controller]")]
     public class GraphQLController : Controller
     {
         private readonly IDocumentExecuter _documentExecuter;

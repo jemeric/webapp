@@ -11,6 +11,7 @@ using Microsoft.Extensions.FileProviders;
 using webapp.Services;
 using webapp.Services.Initialization;
 using GraphiQl;
+using GraphQL.Types;
 
 namespace webapp
 {
@@ -36,6 +37,11 @@ namespace webapp
             //    IHostingEnvironment env = ctx.GetService<IHostingEnvironment>();
             //    return await NPMManagerService.BuildNPMManagerService(env);
             //});
+
+            services.AddSingleton<ISchema>((ctx) =>
+            {
+                return Schema.For(@"");
+            });
 
         }
 
@@ -65,6 +71,9 @@ namespace webapp
 
             app.UseMvc(routes =>
             {
+                routes.MapRoute("graphql", "api/graphql",
+                    defaults: new { controller = "GraphQL", action = "Post" });
+
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}");
