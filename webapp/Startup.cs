@@ -28,6 +28,7 @@ namespace webapp
 
             // setup dependencies for injection here
             services.AddSingleton<NPMManagerService>();
+            services.AddSingleton<GraphQLService>();
             // TODO - this could be broken into multiple initializers if it becomes more complex
             // may need to be run in parallel - https://github.com/thomaslevesque/AspNetCore.AsyncInitialization/issues/8 
             services.AddAsyncInitializer<WebAppInitializer>();
@@ -37,11 +38,6 @@ namespace webapp
             //    IHostingEnvironment env = ctx.GetService<IHostingEnvironment>();
             //    return await NPMManagerService.BuildNPMManagerService(env);
             //});
-
-            services.AddSingleton<ISchema>((ctx) =>
-            {
-                return Schema.For(@"");
-            });
 
         }
 
@@ -67,7 +63,7 @@ namespace webapp
                 });
             }
 
-            app.UseGraphiQl();
+            app.UseGraphiQl("/api/graphql");
 
             app.UseMvc(routes =>
             {

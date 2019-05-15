@@ -6,17 +6,18 @@ using System.Threading.Tasks;
 using GraphQL;
 using webapp.Models;
 using GraphQL.Types;
+using webapp.Services;
 
 namespace webapp.Controllers
 {
     public class GraphQLController : Controller
     {
+        private readonly GraphQLService graphQLService;
         private readonly IDocumentExecuter _documentExecuter;
-        private readonly ISchema _schema;
 
-        public GraphQLController(ISchema schema, IDocumentExecuter documentExecuter)
+        public GraphQLController(GraphQLService graphQLService, IDocumentExecuter documentExecuter)
         {
-            _schema = schema;
+            this.graphQLService = graphQLService;
             _documentExecuter = documentExecuter;
         }
 
@@ -27,7 +28,7 @@ namespace webapp.Controllers
             Inputs inputs = query.Variables.ToInputs();
             ExecutionOptions executionOptions = new ExecutionOptions
             {
-                Schema = _schema,
+                Schema = await graphQLService.GetSchema(),
                 Query = query.Query,
                 Inputs = inputs
             };
