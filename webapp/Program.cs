@@ -16,6 +16,10 @@ namespace webapp
         {
             IWebHost webHost = BuildWebHost(args)
                 .UseWebRoot("ClientApp/dist")
+                .ConfigureAppConfiguration((hostingContext, config) =>
+                {
+                    // TODO - add configuration files
+                })
                 .Build();
             /* perform initialization here - see https://www.thomaslevesque.com/2018/09/25/asynchronous-initialization-in-asp-net-core-revisited/ */
             await webHost.InitAsync();

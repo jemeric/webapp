@@ -1,19 +1,19 @@
 type Query {
-    settings(): Settings!
+    settings(test: Int): AppSettings!
 }
 
 type Mutation {
-    updateAssetsVersion(assetsVersion: String!) : Assets!
+    updateAssetsVersion(assetsVersion: String!) : AssetConfig!
     # publishes latest if null
-    publishVersion(assetVersion: String) : Assets!
-    removeVersion(assetVersion: String): Assets!
+    publishVersion(assetsVersion: String) : AssetConfig!
+    removeVersion(assetsVersion: String): AssetConfig!
 }
 
-type Settings {
-    assets: Assets!
+type AppSettings {
+    assetConfig: AssetConfig!
 }
 
-type Assets {
+type AssetConfig {
     latestVersion: String!
     publishedVersion: String!
     instances: [AssetInstance!]

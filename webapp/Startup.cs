@@ -11,24 +11,38 @@ using Microsoft.Extensions.FileProviders;
 using webapp.Services;
 using webapp.Services.Initialization;
 using GraphiQl;
-using GraphQL.Types;
+using webapp.Models;
+using HotChocolate;
+using HotChocolate.AspNetCore;
 
 namespace webapp
 {
     public class Startup
     {
+        private readonly IHostingEnvironment env;
+
+        // https://stackoverflow.com/a/38792310/4586866
+        public Startup(IHostingEnvironment env)
+        {
+            this.env = env;
+        }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
             // see https://docs.microsoft.com/en-us/aspnet/core/performance/caching/memory?view=aspnetcore-2.2
             //services.AddMemoryCache();
+            // TODO: it should be possible to load the schema without blocking the services (create + link issue)
+            ISchema schema = GraphQLService.LoadSchema($"{env.ContentRootPath}/Assets/GraphQL/schema.graphql");
 
             services.AddMvc();
 
             // setup dependencies for injection here
             services.AddSingleton<NPMManagerService>();
-            services.AddSingleton<GraphQLService>();
+            //services.AddSingleton<GraphQLService>();
+            services.AddGraphQL(schema);
+            //services.AddSingleton<QueryResolver>();
             // TODO - this could be broken into multiple initializers if it becomes more complex
             // may need to be run in parallel - https://github.com/thomaslevesque/AspNetCore.AsyncInitialization/issues/8 
             services.AddAsyncInitializer<WebAppInitializer>();
@@ -57,19 +71,17 @@ namespace webapp
                 // change project path so webpack middleware knows where to look
                 app.UseWebpackDevMiddleware(new Microsoft.AspNetCore.SpaServices.Webpack.WebpackDevMiddlewareOptions
                 {
-                    ProjectPath = Path.Combine(Directory.GetCurrentDirectory(), "ClientApp"),
+                    ProjectPath = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "ClientApp"),
                     HotModuleReplacement = true,
                     ReactHotModuleReplacement = true
                 });
             }
 
-            app.UseGraphiQl("/api/graphql");
+            app.UseGraphQL("/api/graphql");
+            app.UseGraphiQl("/graphql", "/api/graphql"); // alternative to handle auth - app.UseGraphQLPlayground(new GraphQLPlaygroundOptions()); //to explorer API navigate  ?
 
             app.UseMvc(routes =>
             {
-                routes.MapRoute("graphql", "api/graphql",
-                    defaults: new { controller = "GraphQL", action = "Post" });
-
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}");
@@ -86,7 +98,7 @@ namespace webapp
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(
-                    Path.Combine(env.ContentRootPath, path)),
+                    System.IO.Path.Combine(env.ContentRootPath, path)),
                 RequestPath = "/" + path
             });
         }
