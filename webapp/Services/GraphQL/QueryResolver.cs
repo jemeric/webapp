@@ -19,9 +19,9 @@ namespace webapp.Services.GraphQL
             return await Task.Run(() => new AppSettings());
         } */
 
-        public async Task<AppSettings> GetSettings(int? test)
+        public AppSettings GetSettings()
         {
-            return await Task.Run(() => new AppSettings());
+            return new AppSettings();
         }
 
     }

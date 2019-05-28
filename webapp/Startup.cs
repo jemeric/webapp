@@ -14,17 +14,22 @@ using GraphiQl;
 using webapp.Models;
 using HotChocolate;
 using HotChocolate.AspNetCore;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
+using webapp.Services.Assets;
 
 namespace webapp
 {
     public class Startup
     {
         private readonly IHostingEnvironment env;
+        private readonly IConfiguration configuration;
 
         // https://stackoverflow.com/a/38792310/4586866
-        public Startup(IHostingEnvironment env)
+        public Startup(IHostingEnvironment env, IConfiguration configuration)
         {
             this.env = env;
+            this.configuration = configuration;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -46,6 +51,15 @@ namespace webapp
             // TODO - this could be broken into multiple initializers if it becomes more complex
             // may need to be run in parallel - https://github.com/thomaslevesque/AspNetCore.AsyncInitialization/issues/8 
             services.AddAsyncInitializer<WebAppInitializer>();
+            if(configuration.GetValue<bool>("IsDistributed"))
+            {
+                // TODO - use Redis https://dotnetcoretutorials.com/2017/01/06/using-redis-cache-net-core/
+            }
+            else {
+                services.AddDistributedMemoryCache();
+                services.AddSingleton<IAssetsService, InMemoryAssetsService>();
+            }
+
             //services.AddSingleton<NPMManagerService>((ctx) =>
             //{
             //    // example using provider (implementationFactory)

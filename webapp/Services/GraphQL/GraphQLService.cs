@@ -8,24 +8,18 @@ using System.Threading.Tasks;
 using webapp.Services.GraphQL;
 using HotChocolate;
 using webapp.Models.GraphQL;
+using HotChocolate.Types;
 
 namespace webapp.Services
 {
     public class GraphQLService
     {
-        private readonly AsyncLazy<ISchema> schema;
-
 /*        public GraphQLService(IHostingEnvironment env)
         {
             schema = new AsyncLazy<ISchema>(async () =>
             {
                 return await LoadSchema($"{env.ContentRootPath}/Assets/GraphQL/schema.graphql");
             });
-        }
-
-        public async Task<ISchema> GetSchema()
-        {
-            return await schema;
         } */
 
         public static ISchema LoadSchema(string path)
@@ -40,7 +34,8 @@ namespace webapp.Services
                 c.BindResolver<AppSettingsResolver>().To<AppSettings>();
                 c.BindResolver<AssetConfigResolver>().To<AssetConfig>();
                 c.BindResolver<AssetInstanceResolver>().To<AssetInstance>();
-
+                c.BindType<AssetVersion>().To("AssetVersion");
+                c.RegisterType<DateTimeType>();
             });
         }
     }

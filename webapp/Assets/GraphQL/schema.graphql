@@ -1,12 +1,14 @@
+scalar DateTime
+
 type Query {
-    settings(test: Int): AppSettings!
+    settings(): AppSettings!
 }
 
 type Mutation {
+    # request all instances download the given asset version
     updateAssetsVersion(assetsVersion: String!) : AssetConfig!
-    # publishes latest if null
+    # publish the given asset version (availableVersion if null)
     publishVersion(assetsVersion: String) : AssetConfig!
-    removeVersion(assetsVersion: String): AssetConfig!
 }
 
 type AppSettings {
@@ -14,15 +16,26 @@ type AppSettings {
 }
 
 type AssetConfig {
-    latestVersion: String!
-    publishedVersion: String!
+    # the latest version that has been downloaded to all instances
+    lastUpdatedVersion: AssetVersion
+    # the version that has been published to all instances
+    publishedVersion: AssetVersion
+    # the version that was previously published to all instances
+    previousPublishedVersion: AssetVersion
+    # the asset version status for each instance
     instances: [AssetInstance!]
 }
 
 type AssetInstance {
+    # the network address of this instance
     address: String!
-    availableVersions: [String!]
-    downloadingVersion: String
-    latestVersion: String
-    publishedVersion: String
+    # the versions that exist on this instance (should match previous/available/published if available)
+    availableVersions: [AssetVersion!]
+    # the version being downloaded to this instance if in the process of downloading
+    downloadingVersion: AssetVersion
+}
+
+type AssetVersion {
+    dateUpdated: DateTime!
+    version: String!
 }

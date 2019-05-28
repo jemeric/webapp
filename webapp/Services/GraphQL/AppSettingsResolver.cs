@@ -11,7 +11,7 @@ namespace webapp.Services.GraphQL
 
         public AssetConfig GetAssetConfig(AppSettings settings)
         {
-            return settings.GetAssetConfig();
+            return new AssetConfig(); // nothing to do here yet
         }
 
     }

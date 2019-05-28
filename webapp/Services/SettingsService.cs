@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace webapp.Models.GraphQL
+namespace webapp.Services
 {
-    public class AppSettings
+    public class SettingsService
     {
 
 

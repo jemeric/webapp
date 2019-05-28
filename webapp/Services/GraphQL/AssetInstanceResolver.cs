@@ -14,24 +14,15 @@ namespace webapp.Services.GraphQL
             return instance.GetAddress();
         }
 
-        public string[] GetAvailableVersions(AssetInstance instance)
+        public AssetVersion[] GetAvailableVersions(AssetInstance instance)
         {
             return instance.GetAvailableVersions();
         }
 
-        public string GetDownloadingVersion(AssetInstance instance)
+        public AssetVersion GetDownloadingVersion(AssetInstance instance)
         {
             return instance.GetDownloadingVersion();
         }
 
-        public string GetLatestVersion(AssetInstance instance)
-        {
-            return instance.GetLatestVersion();
-        }
-
-        public string GetPublishedVersion(AssetInstance instance)
-        {
-            return instance.GetPublishedVersion();
-        }
     }
 }

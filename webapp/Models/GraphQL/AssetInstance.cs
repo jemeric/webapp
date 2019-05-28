@@ -12,22 +12,12 @@ namespace webapp.Models.GraphQL
             return "nothing";
         }
 
-        public string[] GetAvailableVersions()
+        public AssetVersion[] GetAvailableVersions()
         {
-            return new string[] { "nothing" };
+            return null; // new string[] { "nothing" };
         }
 
-        public string GetDownloadingVersion()
-        {
-            return null;
-        }
-
-        public string GetLatestVersion()
-        {
-            return null;
-        }
-
-        public string GetPublishedVersion()
+        public AssetVersion GetDownloadingVersion()
         {
             return null;
         }
