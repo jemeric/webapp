@@ -5,23 +5,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using webapp.Models.GraphQL;
+using webapp.Services.Assets;
 using webapp.Util;
 
 namespace webapp.Services.GraphQL
 {
     public class MutationResolver
     {
-        private readonly IDistributedCache cache;
+        private readonly IAssetsService assetsService;
 
-        public MutationResolver(IDistributedCache cache)
+        public MutationResolver(IAssetsService assetsService)
         {
-            this.cache = cache;
+            this.assetsService = assetsService;
         }
 
         [GraphQLName("updateAssetsVersion")]
         public async Task<AssetConfig> UpdateAssetsVersion(string assetsVersion)
         {
-            await cache.SetStringAsync(AppConstants.CacheKeys.lastUpdatedVersion, assetsVersion);
+            await this.assetsService.UpdateVersion(assetsVersion);
+            //await cache.SetStringAsync(AppConstants.CacheKeys.lastUpdatedVersion, assetsVersion);
             // TODO - request service to download assets
             //return await cache.GetAsync(assetsVersion);
             return await Task.Run(() => new AssetConfig());

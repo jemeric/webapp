@@ -10,10 +10,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using webapp.Services;
 using webapp.Services.Initialization;
-using GraphiQl;
 using webapp.Models;
 using HotChocolate;
 using HotChocolate.AspNetCore;
+using HotChocolate.AspNetCore.Playground;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using webapp.Services.Assets;
@@ -92,7 +92,11 @@ namespace webapp
             }
 
             app.UseGraphQL("/api/graphql");
-            app.UseGraphiQl("/graphql", "/api/graphql"); // alternative to handle auth - app.UseGraphQLPlayground(new GraphQLPlaygroundOptions()); //to explorer API navigate  ?
+            app.UsePlayground(new PlaygroundOptions()
+            {
+                Path = "/playground",
+                QueryPath = "/api/graphql"
+            });
 
             app.UseMvc(routes =>
             {

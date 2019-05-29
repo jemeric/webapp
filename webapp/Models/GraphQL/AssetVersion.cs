@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace webapp.Models.GraphQL
 {
+    [Serializable]
     public class AssetVersion
     {
         public string Version { get; }

@@ -11,11 +11,11 @@ namespace webapp.Services.Assets
 {
     public class InMemoryAssetsService : AbstractAssetService
     {
-        private readonly IDistributedCache distributedCahce;
+        private readonly IDistributedCache distributedCache;
 
-        public InMemoryAssetsService(IDistributedCache distributedCahce) : base(distributedCahce)
+        public InMemoryAssetsService(IDistributedCache distributedCache) : base(distributedCache)
         {
-            this.distributedCahce = distributedCahce;
+            this.distributedCache = distributedCache;
         }
 
         public override Task<AssetInstance[]> GetInstances()
@@ -33,8 +33,10 @@ namespace webapp.Services.Assets
             // TODO - download remote folder stream from DO/S3/GCP?
             // write into ClientApp/dist/versions
             // change last updated version
-            AssetVersion updated = new AssetVersion("test123", new DateTime()); // TODO - create central Clock for DateTime
-            await this.distributedCahce.SetAsync<AssetVersion>(AppConstants.CacheKeys.lastUpdatedVersion, updated, new DistributedCacheEntryOptions());
+            AssetVersion updated = new AssetVersion(assetsVersion, new DateTime()); // TODO - create central Clock for DateTime
+            // TODO - update using Mongo or something else for distributed version of this (with distributed cache just as a wrapper)
+            await this.distributedCache.SetAsync<AssetVersion>(AppConstants.CacheKeys.lastUpdatedVersion, updated, new DistributedCacheEntryOptions());
+            //this.distributedCache.Try
         }
     }
 }

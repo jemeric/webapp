@@ -15,7 +15,7 @@ namespace webapp.Services.GraphQL
             this.assetService = assetService;
         }
 
-        public async Task<AssetVersion> GetLatestVersion(AssetConfig assetConfig)
+        public async Task<AssetVersion> GetLastUpdatedVersion(AssetConfig assetConfig)
         {
             return await this.assetService.GetLastUpdatedVersion();
         }
@@ -23,6 +23,11 @@ namespace webapp.Services.GraphQL
         public async Task<AssetVersion> GetPublishedVersion(AssetConfig assetConfig)
         {
             return await this.assetService.GetPublishedVersion();
+        }
+
+        public async Task<AssetVersion> GetPreviousPublishedVersion(AssetConfig assetConfig)
+        {
+            return await this.assetService.GetPreviousPublishedVersion();
         }
 
         public async Task<AssetInstance[]> GetInstances(AssetConfig assetConfig)
