@@ -44,8 +44,8 @@ namespace webapp
             services.AddMvc();
 
             // setup dependencies for injection here
-            services.AddSingleton<SettingsService>();
             services.AddSingleton<NPMManagerService>();
+            services.AddScoped<SettingsService>();
             //services.AddSingleton<GraphQLService>();
             services.AddGraphQL(schema);
             //services.AddSingleton<QueryResolver>();
@@ -58,7 +58,7 @@ namespace webapp
             }
             else {
                 services.AddDistributedMemoryCache();
-                services.AddSingleton<IAssetsService, InMemoryAssetsService>();
+                services.AddScoped<IAssetsService, InMemoryAssetsService>();
             }
 
             //services.AddSingleton<NPMManagerService>((ctx) =>

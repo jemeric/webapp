@@ -9,7 +9,7 @@ namespace webapp.Models.Settings
     {
         public long OffsetInMillis { get; }
         public DateTime CurrentTime {
-            get {  return new DateTime().AddMilliseconds(OffsetInMillis); }
+            get {  return DateTime.Now.AddMilliseconds(OffsetInMillis); }
         }
         public AppClock(long offsetInMillis)
         {

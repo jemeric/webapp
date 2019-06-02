@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
+using Nito.AsyncEx;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,16 +13,18 @@ namespace webapp.Services
     public class SettingsService
     {
         private readonly IDistributedCache distributedCache;
+        private readonly AsyncLazy<long> currentClockOffset;
 
         public SettingsService(IDistributedCache distributedCache)
         {
             this.distributedCache = distributedCache;
+            this.currentClockOffset = new AsyncLazy<long>(() => GetClockOffsetFromCache());
         }
 
-        public DateTime GetNow()
+        private async Task<long> GetClockOffsetFromCache()
         {
-            // TODO - allow this to be offset
-            return new DateTime();
+            // default of long? would be nullable, default of long is 0 (which is fine in this case)
+            return await distributedCache.GetAsync<long>(AppConstants.CacheKeys.clockOffsetInMillis);
         }
 
         public async Task<AppClock> SetClockOffset(long clockOffsetInMillis)
@@ -32,8 +35,8 @@ namespace webapp.Services
 
         public async Task<long> GetClockOffset()
         {
-            // default of long? would be nullable, default of long is 0 (which is fine in this case)
-            return await distributedCache.GetAsync<long>(AppConstants.CacheKeys.clockOffsetInMillis);
+            // will only request clock offset at most once per request
+            return await this.currentClockOffset;
         }
 
         public async Task<AppClock> GetClock()

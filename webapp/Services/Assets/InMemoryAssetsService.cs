@@ -35,7 +35,8 @@ namespace webapp.Services.Assets
             // TODO - download remote folder stream from DO/S3/GCP?
             // write into ClientApp/dist/versions
             // change last updated version
-            AssetVersion updated = new AssetVersion(assetsVersion, settingsService.GetNow());
+            Models.Settings.AppClock appClock = await settingsService.GetClock();
+            AssetVersion updated = new AssetVersion(assetsVersion, appClock.CurrentTime);
             // TODO - update using Mongo or something else for distributed version of this (with distributed cache just as a wrapper)
             await this.distributedCache.SetAsync<AssetVersion>(AppConstants.CacheKeys.lastUpdatedVersion, updated, new DistributedCacheEntryOptions());
             //this.distributedCache.Try
