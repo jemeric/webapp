@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using webapp.Models.GraphQL;
+using webapp.Models.Settings.Assets;
 using webapp.Util;
 using webapp.Util.Extensions;
 

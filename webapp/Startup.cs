@@ -44,6 +44,7 @@ namespace webapp
             services.AddMvc();
 
             // setup dependencies for injection here
+            services.AddSingleton<SettingsService>();
             services.AddSingleton<NPMManagerService>();
             //services.AddSingleton<GraphQLService>();
             services.AddGraphQL(schema);

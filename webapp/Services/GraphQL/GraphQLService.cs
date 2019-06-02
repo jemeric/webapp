@@ -7,8 +7,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using webapp.Services.GraphQL;
 using HotChocolate;
-using webapp.Models.GraphQL;
 using HotChocolate.Types;
+using webapp.Models.Settings;
+using webapp.Models.Settings.Assets;
 
 namespace webapp.Services
 {
@@ -35,7 +36,9 @@ namespace webapp.Services
                 c.BindResolver<AssetConfigResolver>().To<AssetConfig>();
                 c.BindResolver<AssetInstanceResolver>().To<AssetInstance>();
                 c.BindType<AssetVersion>().To("AssetVersion");
+                c.BindType<AppClock>().To("AppClock");
                 c.RegisterType<DateTimeType>();
+                c.RegisterType<LongType>();
             });
         }
     }

@@ -1,10 +1,13 @@
 scalar DateTime
+scalar Long
 
 type Query {
     settings(): AppSettings!
 }
 
 type Mutation {
+    # change the current time
+    changeClockOffset(offsetInMillis: Long!) : AppClock!
     # request all instances download the given asset version
     updateAssetsVersion(assetsVersion: String!) : AssetConfig!
     # publish the given asset version (availableVersion if null)
@@ -12,7 +15,13 @@ type Mutation {
 }
 
 type AppSettings {
+    clock: AppClock!
     assetConfig: AssetConfig!
+}
+
+type AppClock {
+    offsetInMillis: Long!
+    currentTime: DateTime!
 }
 
 type AssetConfig {

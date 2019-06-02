@@ -12,6 +12,7 @@ namespace webapp.Util
             public const string lastUpdatedVersion = "availableVersion";
             public const string publishedVersion = "publishedVersion";
             public const string previouslyPublishedVersion = "prevPublishedVersion";
+            public const string clockOffsetInMillis = "clockOffsetInMillis";
         }
     }
 }

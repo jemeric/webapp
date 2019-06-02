@@ -15,10 +15,16 @@ namespace webapp.Util.Extensions
             await distributedCache.SetAsync(key, value.ToByteArray(), options, token);
         }
 
-        public async static Task<T> GetAsync<T>(this IDistributedCache distributedCache, string key, CancellationToken token = default(CancellationToken)) where T : class
+        public async static Task<T> GetAsync<T>(this IDistributedCache distributedCache, string key, CancellationToken token = default(CancellationToken))
         {
             var result = await distributedCache.GetAsync(key, token);
             return result.FromByteArray<T>();
         }
+
+        //public async static Task<T> GetAsync<T>(this IDistributedCache distributedCache, string key, CancellationToken token = default(CancellationToken))
+        //{
+        //    var result = await distributedCache.GetAsync(key, token);
+        //    return result.FromByteArray<T>();
+        //}
     }
 }

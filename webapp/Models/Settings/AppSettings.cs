@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace webapp.Models.GraphQL
+namespace webapp.Models.Settings
 {
-    public class AssetConfig
+    public class AppSettings
     {
+
 
     }
 }

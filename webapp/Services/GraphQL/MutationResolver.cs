@@ -4,7 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using webapp.Models.GraphQL;
+using webapp.Models.Settings;
+using webapp.Models.Settings.Assets;
 using webapp.Services.Assets;
 using webapp.Util;
 
@@ -13,10 +14,18 @@ namespace webapp.Services.GraphQL
     public class MutationResolver
     {
         private readonly IAssetsService assetsService;
+        private readonly SettingsService settingsService;
 
-        public MutationResolver(IAssetsService assetsService)
+        public MutationResolver(IAssetsService assetsService, SettingsService settingsService)
         {
             this.assetsService = assetsService;
+            this.settingsService = settingsService;
+        }
+
+        [GraphQLName("changeClockOffset")]
+        public async Task<AppClock> ChangeClockOffset(long offsetInMillis)
+        {
+            return await settingsService.SetClockOffset(offsetInMillis);
         }
 
         [GraphQLName("updateAssetsVersion")]

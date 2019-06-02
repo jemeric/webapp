@@ -24,7 +24,7 @@ namespace webapp.Util.Extensions
             }
         }
 
-        public static T FromByteArray<T>(this byte[] byteArray) where T : class
+        public static T FromByteArray<T>(this byte[] byteArray)
         {
             if (byteArray == null)
             {
@@ -33,7 +33,14 @@ namespace webapp.Util.Extensions
             BinaryFormatter binaryFormatter = new BinaryFormatter();
             using (MemoryStream memoryStream = new MemoryStream(byteArray))
             {
-                return binaryFormatter.Deserialize(memoryStream) as T;
+                object cachedObj = binaryFormatter.Deserialize(memoryStream);
+                if(cachedObj is T tValue)
+                {
+                    return tValue;
+                } else
+                {
+                    return default(T);
+                }
             }
         }
     }
