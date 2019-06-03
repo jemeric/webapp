@@ -14,5 +14,8 @@ namespace webapp.Services.Assets
         Task<AssetInstance[]> GetInstances();
         Task UpdateVersion(string assetsVersion);
         Task PublishVersion(string assetsVersion);
+        string GetCDNHost();
+        Task<bool> IsCDNEnabled();
+        Task ToggleAssetCDN(bool enable);
     }
 }

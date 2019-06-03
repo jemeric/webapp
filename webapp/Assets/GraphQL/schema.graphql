@@ -12,6 +12,8 @@ type Mutation {
     updateAssetsVersion(assetsVersion: String!) : AssetConfig!
     # publish the given asset version (availableVersion if null)
     publishVersion(assetsVersion: String) : AssetConfig!
+    # toggle loading client-side assets from cdn or directly from instance
+    toggleAssetCDN(enable: Boolean!): AssetConfig!
 }
 
 type AppSettings {
@@ -33,6 +35,10 @@ type AssetConfig {
     previousPublishedVersion: AssetVersion
     # the asset version status for each instance
     instances: [AssetInstance!]
+    # the current CDN host
+    cdnHost: String!
+    # whether or not the cdn is enabled
+    isCDNEnabled: Boolean!
 }
 
 type AssetInstance {

@@ -35,12 +35,19 @@ namespace webapp.Services.GraphQL
             //await cache.SetStringAsync(AppConstants.CacheKeys.lastUpdatedVersion, assetsVersion);
             // TODO - request service to download assets
             //return await cache.GetAsync(assetsVersion);
-            return await Task.Run(() => new AssetConfig());
+            return new AssetConfig();
         }
 
         [GraphQLName("publishVersion")]
         public AssetConfig PublishVersion(string assetsVersion)
         {
+            return new AssetConfig();
+        }
+
+        [GraphQLName("toggleAssetCDN")]
+        public async Task<AssetConfig> ToggleAssetCDN(bool enable)
+        {
+            await this.assetsService.ToggleAssetCDN(enable);
             return new AssetConfig();
         }
     }

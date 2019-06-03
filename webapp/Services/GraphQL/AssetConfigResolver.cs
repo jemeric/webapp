@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HotChocolate;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,6 +14,17 @@ namespace webapp.Services.GraphQL
 
         public AssetConfigResolver(IAssetsService assetService) {
             this.assetService = assetService;
+        }
+
+        public string GetCdnHost(AssetConfig assetConfig)
+        {
+            return this.assetService.GetCDNHost();
+        }
+
+        [GraphQLName("isCDNEnabled")]
+        public async Task<bool> IsCDNEnabled(AssetConfig assetConfig)
+        {
+            return await this.assetService.IsCDNEnabled();
         }
 
         public async Task<AssetVersion> GetLastUpdatedVersion(AssetConfig assetConfig)

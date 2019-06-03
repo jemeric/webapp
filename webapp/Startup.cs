@@ -17,6 +17,8 @@ using HotChocolate.AspNetCore.Playground;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using webapp.Services.Assets;
+using webapp.Util.Dto.Configuration;
+using webapp.Services.Storage;
 
 namespace webapp
 {
@@ -60,6 +62,9 @@ namespace webapp
                 services.AddDistributedMemoryCache();
                 services.AddScoped<IAssetsService, InMemoryAssetsService>();
             }
+            services.AddSingleton(BindConfig<S3Configuration>("S3"));
+            services.AddSingleton(BindConfig<AssetsConfiguration>("Assets"));
+            services.AddTransient<IStorageService, S3StorageService>();
 
             //services.AddSingleton<NPMManagerService>((ctx) =>
             //{
@@ -68,6 +73,13 @@ namespace webapp
             //    return await NPMManagerService.BuildNPMManagerService(env);
             //});
 
+        }
+
+        private T BindConfig<T>(string bindToConfigName) where T : new()
+        {
+            var config = new T();
+            configuration.Bind(bindToConfigName, config);
+            return config;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
