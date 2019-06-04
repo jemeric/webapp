@@ -46,8 +46,9 @@ namespace webapp.Services.Assets
         public override async Task UpdateVersion(string assetsVersion)
         {
             // download remote folder stream from DO/S3/GCP?
-            await storageService.Copy(assetsVersion, $"{env.ContentRootPath}/{AppConstants.webRoot}/{assetsVersion}");
-            
+            await storageService.Copy($"{assetsVersion}/client", $"{env.ContentRootPath}/{AppConstants.webRoot}/{assetsVersion}");
+            await storageService.Copy($"{assetsVersion}/server", $"{env.ContentRootPath}/{AppConstants.assetRoot}/server/{assetsVersion}");
+
             // write into ClientApp/dist/versions
             // change last updated version
             Models.Settings.AppClock appClock = await settingsService.GetClock();
