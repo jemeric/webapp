@@ -7,7 +7,7 @@ namespace webapp.Util
 {
     public static class AppConstants
     {
-        public const string webRoot = "ClientApp/dist";
+        public const string webRoot = "ClientApp/dist/client";
         public static class CacheKeys
         {
             public const string lastUpdatedVersion = "availableVersion";

@@ -44,21 +44,29 @@ function generateDeploymentVersion(done) {
   });
 }
 
+function uploadAssets(version, fromPath, toPath, permissions) {
+  return spawn(
+    "aws",
+    [
+      "s3",
+      "cp",
+      fromPath,
+      `s3://${version}/${toPath}`,
+      `--endpoint=https://${process.env.S3_BUCKET}.${process.env.S3_ENDPOINT}`,
+      "--acl",
+      permissions,
+      "--recursive"
+    ],
+    { stdio: "inherit" }
+  );
+}
+
 gulp.task("upload-assets", function(done) {
     generateDeploymentVersion(function(version) {
-        spawn(
-          "aws",
-          [
-            "s3",
-            "cp",
-            "./dist",
-            `s3://${version}`,
-            `--endpoint=https://${process.env.S3_BUCKET}.${process.env.S3_ENDPOINT}`,
-            "--acl",
-            "public-read",
-            "--recursive"
-          ],
-          { stdio: "inherit" }
-        ).on("close", done);
+      uploadAssets(version, "./dist/client", "client", "public-read")
+      .on("close", function() {
+        uploadAssets(version, "./dist/server", "server", "private")
+        .on("close", done);
+      })
     });
 });
