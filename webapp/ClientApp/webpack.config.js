@@ -10,8 +10,7 @@ module.exports = env => {
   const isOutputOverride = (env && env.outputPath);
   const outputPath = isOutputOverride ? env.outputPath : defaultOutput;
   const clientAssetPath = isOutputOverride ? "client" : "client/default";
-  const serverAssetPath = isOutputOverride ? "server/test" : "server/default";
-  console.log("SERVER ASSET PATH: ", serverAssetPath); // investigate - not writing to server????
+  const serverAssetPath = isOutputOverride ? "server" : "server/default";
   // TODO - turns out this cleanup breaks the ASP.NET server-side rendering (not including it for default path for now)
   const plugins = isOutputOverride ? [ new CleanWebpackPlugin() ] : []; // cleanup files in dist before doing build
 
