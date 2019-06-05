@@ -7,12 +7,19 @@ const defaultOutput = "./dist";
 
 module.exports = env => {
   const isDevBuild = !(env && env.prod);
-  const isOutputOverride = (env && env.outputPath);
+  const isOutputOverride = env && env.outputPath;
   const outputPath = isOutputOverride ? env.outputPath : defaultOutput;
   const clientAssetPath = isOutputOverride ? "client" : "client/default";
   const serverAssetPath = isOutputOverride ? "server" : "server/default";
   // TODO - turns out this cleanup breaks the ASP.NET server-side rendering (not including it for default path for now)
-  const plugins = isOutputOverride ? [ new CleanWebpackPlugin() ] : []; // cleanup files in dist before doing build
+  const doCleanBuild = isOutputOverride || !isDevBuild;
+  const cssPlugin = new MiniCssExtractPlugin({
+    filename: "style.css"
+  });
+  const clientPlugins = doCleanBuild
+    ? [new CleanWebpackPlugin(), cssPlugin]
+    : [cssPlugin]; // cleanup files in dist before doing build
+  const serverPlugins = doCleanBuild ? [new CleanWebpackPlugin()] : [];
 
   const externals = NPMExternals.reduce(
     (obj, cur, i) => ((obj[cur.module] = cur.global), obj),
@@ -51,7 +58,7 @@ module.exports = env => {
     },
     // issue in SpaServices mean this is needed even if it is empty
     // if not there hot reload can't find updates
-    plugins
+    plugins: []
   });
 
   const clientBundleConfig = merge(sharedConfig(), {
@@ -74,11 +81,7 @@ module.exports = env => {
         }
       ]
     },
-    plugins: [
-      new MiniCssExtractPlugin({
-        filename: "style.css"
-      })
-    ],
+    plugins: clientPlugins,
     // When importing a module whose path matches one of the following, just
     // assume a corresponding global variable exists and use that instead.
     // This is important because it allows us to avoid bundling all of our
@@ -93,7 +96,7 @@ module.exports = env => {
       path: path.join(__dirname, outputPath, serverAssetPath),
       libraryTarget: "commonjs" // get missing default error without this
     },
-
+    plugins: serverPlugins,
     // Enable sourcemaps for debugging webpack's output.
     devtool: "inline-source-map",
     target: "node"

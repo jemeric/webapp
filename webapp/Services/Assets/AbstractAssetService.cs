@@ -24,13 +24,18 @@ namespace webapp.Services.Assets
         {
             this.distributedCache = distributedCache;
             this.assetsConfiguration = assetsConfiguration;
-            this.lastUpdatedVersion = new AsyncLazy<AssetVersion>(() => GetVersion(AppConstants.CacheKeys.lastUpdatedVersion));
-            this.previouslyPublishedVersion = new AsyncLazy<AssetVersion>(() => GetVersion(AppConstants.CacheKeys.previouslyPublishedVersion));
-            this.publishedVersion = new AsyncLazy<AssetVersion>(() => GetVersion(AppConstants.CacheKeys.publishedVersion));
+            this.lastUpdatedVersion = GetLazyVersion(AppConstants.CacheKeys.lastUpdatedVersion);
+            this.previouslyPublishedVersion = GetLazyVersion(AppConstants.CacheKeys.previouslyPublishedVersion);
+            this.publishedVersion = GetLazyVersion(AppConstants.CacheKeys.publishedVersion);
             this.isCDNEnabled = new AsyncLazy<bool?>(() => distributedCache.GetAsync<bool?>(AppConstants.CacheKeys.isCDNEnabled));
         }
 
-        private async Task<AssetVersion> GetVersion(string cacheKey)
+        private AsyncLazy<AssetVersion> GetLazyVersion(string cacheKey)
+        {
+            return new AsyncLazy<AssetVersion>(() => GetVersion(cacheKey));
+        }
+
+        protected async Task<AssetVersion> GetVersion(string cacheKey)
         {
             return await distributedCache.GetAsync<AssetVersion>(cacheKey);
         }
