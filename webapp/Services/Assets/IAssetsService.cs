@@ -11,7 +11,6 @@ namespace webapp.Services.Assets
         Task<AssetVersion> GetLastUpdatedVersion();
         Task<AssetVersion> GetPublishedVersion();
         Task<AssetVersion> GetPreviousPublishedVersion();
-        Task<AssetVersion[]> GetAllVersions();
         Task<AssetInstance[]> GetInstances();
         Task UpdateVersion(string assetsVersion);
         Task PublishVersion(string assetsVersion);

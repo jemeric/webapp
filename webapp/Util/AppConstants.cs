@@ -9,6 +9,10 @@ namespace webapp.Util
     {
         public const string assetRoot = "ClientApp/dist/";
         public const string webRoot = assetRoot + "client";
+        public static class Assets
+        {
+            public const string defaultAssetVersion = "default";
+        }
         public static class CacheKeys
         {
             public const string lastUpdatedVersion = "availableVersion";

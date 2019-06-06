@@ -1,9 +1,11 @@
 ﻿using Amazon.S3;
+using Amazon.S3.Model;
 using Amazon.S3.Transfer;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using webapp.Util.Dto.Configuration;
 
@@ -28,6 +30,19 @@ namespace webapp.Services.Storage
         {
             var fileTransferUtility = new TransferUtility(s3Client);
             await fileTransferUtility.DownloadDirectoryAsync(config.Bucket, fromDir, toDir);
+        }
+
+        public async Task<bool> Exists(string fileOrDir)
+        {
+            var request = new ListObjectsRequest
+            {
+                BucketName = config.Bucket,
+                Prefix = fileOrDir,
+                MaxKeys = 1
+            };
+
+            var response = await s3Client.ListObjectsAsync(request, CancellationToken.None);
+            return response.S3Objects.Any();
         }
     }
 }
