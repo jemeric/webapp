@@ -14,9 +14,9 @@ namespace webapp.Services.GraphQL
             return instance.GetAddress();
         }
 
-        public AssetVersion[] GetAvailableVersions(AssetInstance instance)
+        public AssetVersion[] GetInstalledVersions(AssetInstance instance)
         {
-            return instance.GetAvailableVersions();
+            return instance.GetInstalledVersions();
         }
 
         public AssetVersion GetDownloadingVersion(AssetInstance instance)

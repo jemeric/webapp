@@ -45,7 +45,7 @@ type AssetInstance {
     # the network address of this instance
     address: String!
     # the versions that exist on this instance (should match previous/available/published if available)
-    availableVersions: [AssetVersion!]
+    installedVersions: [AssetVersion!]
     # the version being downloaded to this instance if in the process of downloading
     downloadingVersion: AssetVersion
 }

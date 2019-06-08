@@ -7,14 +7,23 @@ namespace webapp.Models.Settings.Assets
 {
     public class AssetInstance
     {
-        public string GetAddress()
+        private readonly string address;
+        private readonly AssetVersion[] assetVersions;
+
+        public AssetInstance(string address, AssetVersion[] assetVersions)
         {
-            return "nothing";
+            this.address = address;
+            this.assetVersions = assetVersions;
         }
 
-        public AssetVersion[] GetAvailableVersions()
+        public string GetAddress()
         {
-            return null; // new string[] { "nothing" };
+            return this.address;
+        }
+
+        public AssetVersion[] GetInstalledVersions()
+        {
+            return this.assetVersions;
         }
 
         public AssetVersion GetDownloadingVersion()

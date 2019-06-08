@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
 using System;
 using System.Collections.Generic;
@@ -18,57 +19,32 @@ namespace webapp.Services.Assets
         private readonly IDistributedCache distributedCache;
         private readonly SettingsService settingsService;
         private readonly IStorageService storageService;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
         public InMemoryAssetsService(IHostingEnvironment env, IDistributedCache distributedCache, SettingsService settingsService, IStorageService storageService, 
-            AssetsConfiguration assetsConfiguration) : base(env, distributedCache, assetsConfiguration)
+            AssetsConfiguration assetsConfiguration, IHttpContextAccessor httpContextAccessor) : base(env, distributedCache, assetsConfiguration, settingsService, storageService)
         {
             this.distributedCache = distributedCache;
             this.settingsService = settingsService;
             this.storageService = storageService;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
-        public override Task<AssetInstance[]> GetInstances()
+        public override async Task<AssetInstance[]> GetInstances()
         {
-            throw new NotImplementedException();
-        }
-
-        public override Task PublishVersion(string assetsVersion)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override async Task ToggleAssetCDN(bool enable)
-        {
-            await this.distributedCache.SetAsync<bool>(AppConstants.CacheKeys.isCDNEnabled, enable, new DistributedCacheEntryOptions());
+            // in a non-distributed system we only have one instance (the current one)
+            AssetVersion[] versions = await GetInstalledVersions();
+            string host = this.httpContextAccessor.HttpContext.Request.Host.Host;
+            AssetInstance instance = new AssetInstance(host, versions);
+            return new AssetInstance[] { instance };
         }
 
         public override async Task UpdateVersion(string assetsVersion)
         {
-            // check if folder versions already exist in local file system and ignore otherwise
-            string clientAssetsVersionRoot = GetClientPath(assetsVersion);
-            string serverAssetsVersionRoot = GetServerPath(assetsVersion);
-
-            if(!Directory.Exists(clientAssetsVersionRoot) || !Directory.Exists(serverAssetsVersionRoot))
-            {
-                // check if version exists in remote storage and error otherwise
-                if(!(await storageService.Exists(assetsVersion)))
-                {
-                    throw new Exception("Could not find asset version in remote storage");
-                }
-
-                // copy versioned folder from remote storage to local storage
-                await storageService.Copy($"{assetsVersion}/client", clientAssetsVersionRoot);
-                await storageService.Copy($"{assetsVersion}/server", serverAssetsVersionRoot);
-            }
-
-            // change last updated version
-            Models.Settings.AppClock appClock = await settingsService.GetClock();
-            AssetVersion updated = new AssetVersion(assetsVersion, appClock.CurrentTime);
             // TODO - update using Mongo or something else for distributed version of this (with distributed cache just as a wrapper)
-            await SetLastUpdatedVersion(updated);
 
-            // cleanup orphaned versions if they exist
-            await CleanOrphanedVersions();
+            // in this case there's only one instance so just need to install the new version to the local machine
+            await InstallVersion(assetsVersion);
         }
     }
 }

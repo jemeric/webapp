@@ -19,6 +19,7 @@ using Microsoft.Extensions.Configuration;
 using webapp.Services.Assets;
 using webapp.Util.Dto.Configuration;
 using webapp.Services.Storage;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace webapp
 {
@@ -44,6 +45,9 @@ namespace webapp
             ISchema schema = GraphQLService.LoadSchema($"{env.ContentRootPath}/Assets/GraphQL/schema.graphql");
 
             services.AddMvc();
+
+            // https://stackoverflow.com/a/53577368/4586866
+            services.AddHttpContextAccessor();
 
             // setup dependencies for injection here
             services.AddSingleton<NPMManagerService>();
@@ -86,6 +90,12 @@ namespace webapp
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseStaticFiles(); // allow reference to static files in wwwroot
+
+            //// use forwarded headers (https://stackoverflow.com/questions/39113100/getting-127-0-0-1-when-using-httpcontext-features-getihttpconnectionfeature)
+            //var forwardOpts = new ForwardedHeadersOptions { ForwardedHeaders = ForwardedHeaders.All };
+            //forwardOpts.KnownNetworks.Clear();
+            //forwardOpts.KnownProxies.Clear();
+            //app.UseForwardedHeaders(forwardOpts);
 
             if (env.IsDevelopment())
             {
