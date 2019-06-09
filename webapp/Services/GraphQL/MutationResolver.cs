@@ -39,8 +39,9 @@ namespace webapp.Services.GraphQL
         }
 
         [GraphQLName("publishVersion")]
-        public AssetConfig PublishVersion(string assetsVersion)
+        public async Task<AssetConfig> PublishVersion(string assetsVersion)
         {
+            await this.assetsService.PublishVersion(assetsVersion);
             return new AssetConfig();
         }
 

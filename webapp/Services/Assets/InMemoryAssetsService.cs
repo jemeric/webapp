@@ -34,7 +34,7 @@ namespace webapp.Services.Assets
         public override async Task<AssetInstance[]> GetInstances()
         {
             // in a non-distributed system we only have one instance (the current one)
-            AssetVersion[] versions = await GetInstalledVersions();
+            AssetVersion[] versions = await GetUsableVersions();
             string host = this.httpContextAccessor.HttpContext.Request.Host.Host;
             AssetVersion downloadingVersion = await GetDownloadingVersion();
             AssetInstance instance = new AssetInstance(host, versions, downloadingVersion);

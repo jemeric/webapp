@@ -66,7 +66,10 @@ gulp.task("upload-assets", function(done) {
       uploadAssets(version, "./dist/client", "client", "public-read")
       .on("close", function() {
         uploadAssets(version, "./dist/server", "server", "private")
-        .on("close", done);
+        .on("close", function() {
+          console.log("Deployed New Asset Version: ", version);    
+          done();
+        });
       })
     });
 });

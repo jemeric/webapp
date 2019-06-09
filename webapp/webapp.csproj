@@ -23,7 +23,6 @@
     <Folder Include="Assets\GraphQL\" />
     <Folder Include="ClientApp\dist\" />
     <Folder Include="ClientApp\public\" />
-    <Folder Include="wwwroot\dist\" />
   </ItemGroup>
 
   <ItemGroup>

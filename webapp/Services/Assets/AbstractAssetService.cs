@@ -23,8 +23,8 @@ namespace webapp.Services.Assets
         private readonly SettingsService settingsService;
         private readonly IStorageService storageService;
         private AsyncLazy<AssetVersion> lastUpdatedVersion;
-        private readonly AsyncLazy<AssetVersion> previouslyPublishedVersion;
-        private readonly AsyncLazy<AssetVersion> publishedVersion;
+        private AsyncLazy<AssetVersion> previouslyPublishedVersion;
+        private AsyncLazy<AssetVersion> publishedVersion;
         private readonly AsyncLazy<bool?> isCDNEnabled;
 
         public AbstractAssetService(IHostingEnvironment env, IDistributedCache distributedCache, AssetsConfiguration assetsConfiguration, SettingsService settingsService, 
@@ -53,13 +53,13 @@ namespace webapp.Services.Assets
 
         private async Task SetVersion(string cacheKey, AssetVersion version)
         {
-            await this.distributedCache.SetAsync<AssetVersion>(AppConstants.CacheKeys.lastUpdatedVersion, version, new DistributedCacheEntryOptions());
-            this.lastUpdatedVersion = GetLazyVersion(AppConstants.CacheKeys.lastUpdatedVersion);
+           await this.distributedCache.SetAsync<AssetVersion>(cacheKey, version, new DistributedCacheEntryOptions());
         }
 
         protected async Task SetLastUpdatedVersion(AssetVersion version)
         {
             await SetVersion(AppConstants.CacheKeys.lastUpdatedVersion, version);
+            this.lastUpdatedVersion = GetLazyVersion(AppConstants.CacheKeys.lastUpdatedVersion);
         }
 
         public async Task<AssetVersion> GetLastUpdatedVersion()
@@ -70,6 +70,7 @@ namespace webapp.Services.Assets
         protected async Task SetPreviousPublishedVersion(AssetVersion version)
         {
             await SetVersion(AppConstants.CacheKeys.previouslyPublishedVersion, version);
+            this.previouslyPublishedVersion = GetLazyVersion(AppConstants.CacheKeys.previouslyPublishedVersion);
         }
 
         public async Task<AssetVersion> GetPreviousPublishedVersion()
@@ -79,7 +80,18 @@ namespace webapp.Services.Assets
 
         protected async Task SetPublishedVersion(AssetVersion version)
         {
+            // don't allow the publishing of a version that hasn't been installed on all instances
+            AssetInstance[] instances = await GetInstances();
+            bool isVersionInstalled = instances.All(i => {
+                return i.InstalledVersions.Contains(version);
+            });
+            if(!isVersionInstalled)
+            {
+                throw new Exception("Cannot publish version that hasn't been installed to all instances");
+            }
+
             await SetVersion(AppConstants.CacheKeys.publishedVersion, version);
+            this.publishedVersion = GetLazyVersion(AppConstants.CacheKeys.publishedVersion);
         }
 
         public async Task<AssetVersion> GetPublishedVersion()
@@ -87,7 +99,7 @@ namespace webapp.Services.Assets
             return await publishedVersion;
         }
 
-        protected async Task<AssetVersion[]> GetInstalledVersions()
+        protected async Task<AssetVersion[]> GetUsableVersions()
         {
             AssetVersion[] versions = await Task.WhenAll(GetLastUpdatedVersion(),
                 GetPreviousPublishedVersion(),
@@ -97,7 +109,7 @@ namespace webapp.Services.Assets
         
         protected async Task<AssetVersion> GetDownloadingVersion()
         {
-            AssetVersion[] installedVersions = await GetInstalledVersions();
+            AssetVersion[] installedVersions = await GetUsableVersions();
             AssetVersion lastUpdatedVersion = await GetLastUpdatedVersion();
             if(!installedVersions.Contains(lastUpdatedVersion))
             {
@@ -147,7 +159,7 @@ namespace webapp.Services.Assets
 
         protected async Task CleanOrphanedVersions()
         {
-            string[] installedVersions = (await GetInstalledVersions()).Select(v => v.Version).ToArray();
+            string[] installedVersions = (await GetUsableVersions()).Select(v => v.Version).ToArray();
 
             string[] installedClientVersions = Directory.GetDirectories(GetClientPath());
             string[] installedServerVersions = Directory.GetDirectories(GetServerPath());
@@ -170,7 +182,10 @@ namespace webapp.Services.Assets
             AssetVersion previouslyPublishedVersion = await GetPublishedVersion();
             Models.Settings.AppClock appClock = await settingsService.GetClock();
             await SetPublishedVersion(new AssetVersion(assetsVersion, appClock.CurrentTime));
-            await SetPreviousPublishedVersion(previouslyPublishedVersion);
+            if(previouslyPublishedVersion != null)
+            {
+                await SetPreviousPublishedVersion(previouslyPublishedVersion);
+            }
         }
 
         public async Task ToggleAssetCDN(bool enable)
@@ -193,6 +208,7 @@ namespace webapp.Services.Assets
                     throw new Exception("Could not find asset version in remote storage");
                 }
 
+                // TODO - make externals scripts file installable/invalidate cache and read from it (allows full frontend deployment)
                 // copy versioned folder from remote storage to local storage
                 await storageService.Copy($"{assetsVersion}/client", clientAssetsVersionRoot);
                 await storageService.Copy($"{assetsVersion}/server", serverAssetsVersionRoot);
