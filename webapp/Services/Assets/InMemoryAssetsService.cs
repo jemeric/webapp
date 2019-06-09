@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -35,7 +36,8 @@ namespace webapp.Services.Assets
             // in a non-distributed system we only have one instance (the current one)
             AssetVersion[] versions = await GetInstalledVersions();
             string host = this.httpContextAccessor.HttpContext.Request.Host.Host;
-            AssetInstance instance = new AssetInstance(host, versions);
+            AssetVersion downloadingVersion = await GetDownloadingVersion();
+            AssetInstance instance = new AssetInstance(host, versions, downloadingVersion);
             return new AssetInstance[] { instance };
         }
 

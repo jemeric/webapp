@@ -11,17 +11,17 @@ namespace webapp.Services.GraphQL
 
         public string GetAddress(AssetInstance instance)
         {
-            return instance.GetAddress();
+            return instance.Address;
         }
 
         public AssetVersion[] GetInstalledVersions(AssetInstance instance)
         {
-            return instance.GetInstalledVersions();
+            return instance.InstalledVersions;
         }
 
         public AssetVersion GetDownloadingVersion(AssetInstance instance)
         {
-            return instance.GetDownloadingVersion();
+            return instance.DownloadingVersion;
         }
 
     }

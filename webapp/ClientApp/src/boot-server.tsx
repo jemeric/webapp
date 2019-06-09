@@ -6,27 +6,31 @@ import { App } from "./components/App";
 import { ServerStyleSheet } from "styled-components";
 
 // todo isolate and cache server-side template for easier development
-function getTemplate(app: string, styles: string, scripts: string[]): string {
+function getTemplate(app: string, styles: string, data: IAppData): string {
   return `<head>
                 <meta charset="UTF-8" />
                 <title>Hello React!</title>
-                <link rel="stylesheet" type="text/css" href="/dist/style.css">
+                <link rel="stylesheet" type="text/css" href="/dist/${data.assetsVersion}/style.css">
                 ${styles}
             </head>
             <body>
                 <div id="appId">${app}</div>
-                ${scripts.map(url => `<script src="${url}"></script>`).join("")}
+                ${data.externalScripts.map(url => `<script src="${url}"></script>`).join("")}
                 <!-- Main -->
-                <script src="/dist/main-client.js"></script>
+                <script src="/dist/${data.assetsVersion}/main-client.js"></script>
             </body>`;
+}
+
+interface IAppData {
+  externalScripts: string[];
+  assetsVersion: string;
 }
 
 export default createServerRenderer(params => {
   return new Promise<RenderResult>((resolve, reject) => {
     // this context object contains the results of the render (i.e. context.url will contain URL to redirect to if <Redirect> was used)
     const routerContext: any = {};
-
-    const scripts = params.data as string[];
+    const data = params.data as IAppData;
 
     // see styled components server-side rendering - https://www.styled-components.com/docs/advanced#server-side-rendering
     const sheet = new ServerStyleSheet();
@@ -52,7 +56,7 @@ export default createServerRenderer(params => {
     // once any async tasks are done, we can perform the final render
     params.domainTasks.then(() => {
       resolve({
-        html: getTemplate(html, styleTags, scripts) // you can also use this to initialize globals from the server-side
+        html: getTemplate(html, styleTags, data) // you can also use this to initialize globals from the server-side
       });
     }, reject); // also propagate any errors back into the host application
   });

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
 using Nito.AsyncEx;
 using System;
 using System.Collections.Generic;
@@ -92,6 +93,17 @@ namespace webapp.Services.Assets
                 GetPreviousPublishedVersion(),
                 GetPublishedVersion());
             return versions.Where(v => v != null).ToArray();
+        }
+        
+        protected async Task<AssetVersion> GetDownloadingVersion()
+        {
+            AssetVersion[] installedVersions = await GetInstalledVersions();
+            AssetVersion lastUpdatedVersion = await GetLastUpdatedVersion();
+            if(!installedVersions.Contains(lastUpdatedVersion))
+            {
+                return lastUpdatedVersion;
+            }
+            return null; // not currently downloading a version since it already exists
         }
 
         public string GetCDNHost()

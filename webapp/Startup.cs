@@ -20,6 +20,7 @@ using webapp.Services.Assets;
 using webapp.Util.Dto.Configuration;
 using webapp.Services.Storage;
 using Microsoft.AspNetCore.HttpOverrides;
+using webapp.Util;
 
 namespace webapp
 {
@@ -58,6 +59,7 @@ namespace webapp
             // TODO - this could be broken into multiple initializers if it becomes more complex
             // may need to be run in parallel - https://github.com/thomaslevesque/AspNetCore.AsyncInitialization/issues/8 
             services.AddAsyncInitializer<WebAppInitializer>();
+            // add distributed cache
             if(configuration.GetValue<bool>("IsDistributed"))
             {
                 // TODO - use Redis https://dotnetcoretutorials.com/2017/01/06/using-redis-cache-net-core/
@@ -66,6 +68,8 @@ namespace webapp
                 services.AddDistributedMemoryCache();
                 services.AddScoped<IAssetsService, InMemoryAssetsService>();
             }
+            // add local cache
+            services.AddMemoryCache();
             services.AddSingleton(BindConfig<S3Configuration>("S3"));
             services.AddSingleton(BindConfig<AssetsConfiguration>("Assets"));
             services.AddTransient<IStorageService, S3StorageService>();
@@ -90,6 +94,14 @@ namespace webapp
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseStaticFiles(); // allow reference to static files in wwwroot
+
+            // server files outside of web root
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                    System.IO.Path.Combine(env.ContentRootPath, AppConstants.webRoot)),
+                RequestPath = "/dist"
+            });
 
             //// use forwarded headers (https://stackoverflow.com/questions/39113100/getting-127-0-0-1-when-using-httpcontext-features-getihttpconnectionfeature)
             //var forwardOpts = new ForwardedHeadersOptions { ForwardedHeaders = ForwardedHeaders.All };

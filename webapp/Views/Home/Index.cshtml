@@ -1,3 +1,3 @@
-﻿@model string[]
+﻿@model webapp.Util.Dto.Views.AppData
 <!DOCTYPE html>
-<html asp-prerender-module="ClientApp/dist/server/default/main-server" asp-prerender-data=@Model><body></body></html>
+<html asp-prerender-module="ClientApp/dist/server/@Model.AssetsVersion/main-server" asp-prerender-data=@Model><body></body></html>
