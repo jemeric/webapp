@@ -1,7 +1,7 @@
 scalar DateTime
 scalar Long
 
-type Query {
+type Query @authorize {
     settings(): AppSettings!
 }
 

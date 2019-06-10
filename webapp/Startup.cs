@@ -112,7 +112,6 @@ namespace webapp
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                //ServeFromDirectory(app, env, "node_modules"); grab from external
                 // intercepts requests that would match files built by webpack and dynamically builds those files on demand
                 // browser is guaranteed to receive up-to-date build output
                 // instance of webpack stays active and has partial compilation states pre-cached in memory
@@ -142,17 +141,6 @@ namespace webapp
                 routes.MapSpaFallbackRoute(
                     name: "spa-fallback",
                     defaults: new { controller = "Home", action = "Index" });
-            });
-        }
-
-        // statically include specified path (used to expose npm_modules for dev) https://stackoverflow.com/a/39465629
-        public void ServeFromDirectory(IApplicationBuilder app, IHostingEnvironment env, string path)
-        {
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(
-                    System.IO.Path.Combine(env.ContentRootPath, path)),
-                RequestPath = "/" + path
             });
         }
 
