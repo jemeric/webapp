@@ -23,9 +23,9 @@ namespace webapp.Services.GraphQL
         }
 
         [GraphQLName("changeClockOffset")]
-        public async Task<AppClock> ChangeClockOffset(long offsetInMillis)
+        public async Task<AppClock> ChangeClockOffset(TimeSpan offset)
         {
-            return await settingsService.SetClockOffset(offsetInMillis);
+            return await settingsService.SetClockOffset((long)offset.TotalMilliseconds);
         }
 
         [GraphQLName("updateAssetsVersion")]

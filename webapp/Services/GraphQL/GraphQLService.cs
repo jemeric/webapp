@@ -39,6 +39,7 @@ namespace webapp.Services
                 c.BindType<AppClock>().To("AppClock");
                 c.RegisterType<DateTimeType>();
                 c.RegisterType<LongType>();
+                c.RegisterType<TimeSpanType>();
                 c.RegisterAuthorizeDirectiveType(); // https://hotchocolate.io/docs/authorization
             });
         }
