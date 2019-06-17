@@ -21,6 +21,8 @@ using webapp.Util.Dto.Configuration;
 using webapp.Services.Storage;
 using Microsoft.AspNetCore.HttpOverrides;
 using webapp.Util;
+using IdentityServer4.Models;
+using IdentityServer4;
 
 namespace webapp
 {
@@ -46,6 +48,30 @@ namespace webapp
             ISchema schema = GraphQLService.LoadSchema($"{env.ContentRootPath}/Assets/GraphQL/schema.graphql");
 
             services.AddMvc();
+
+            // configure this as an identity server
+            services.AddIdentityServer()
+                .AddDeveloperSigningCredential()
+                // http://docs.identityserver.io/en/latest/topics/resources.html
+                // define the resources to protect (identity resource has unique name and you can assign arbitrary claim types to it)
+                // will be included in the identity toekn for the user (client will use the scope parameter to request access to identity resource)
+                // OpenID Connect spec - minimum requirement is you provide support for emitting a unique ID for your users (the subject id)
+                // this is done by exposing the standard identity resource (openid)
+                .AddInMemoryIdentityResources(new List<IdentityResource>()
+                {
+                    new IdentityResources.OpenId() // TO-DO move to separate config file
+                })
+                // http://docs.identityserver.io/en/latest/topics/resources.html#defining-api-resources
+                // to allow clients to request access tokens for your APIs you need to define API resources
+                // to get access tokesn for APIs you need to register them as a scope
+                .AddInMemoryApiResources(new List<ApiResource>()
+                {
+                    // this assigns scope for using the AddLocalApiAuthentication helper
+                    new ApiResource(IdentityServerConstants.LocalApi.ScopeName)
+                });
+
+            // adding support for local APIs (on the same server as identity server)
+            services.AddLocalApiAuthentication();
 
             // https://stackoverflow.com/a/53577368/4586866
             services.AddHttpContextAccessor();
