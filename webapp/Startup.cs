@@ -61,6 +61,53 @@ namespace webapp
                 {
                     new IdentityResources.OpenId() // TO-DO move to separate config file
                 })
+                .AddInMemoryClients(new List<Client>()
+                {
+                    // backend client
+                    new Client
+                    {
+                        ClientId = "client",
+                        ClientName = "Backend Client",
+
+                        // no interactive user, use the clientid/secret for authentication
+                        // (server-to-server communication - tokens always requested on behalf of client, not user)
+                        AllowedGrantTypes = GrantTypes.ClientCredentials,
+
+                        // secret for authentication
+                        ClientSecrets =
+                        {
+                            new Secret("secret".Sha256())
+                        },
+
+                        // scopes the client has access to
+                        AllowedScopes = { IdentityServerConstants.LocalApi.ScopeName }
+
+                    },
+
+                    // JavaScript client
+                    new Client
+                    {
+                        ClientId = "spa",
+                        ClientName = "JavaScript Client",
+                        // for Javascript-based applications use Authorization Code with PKCE instead of implicit
+                        // Code (Authorization Code) = provides a way to retrieve tokens on a back-channel as opposed to browser front-channel
+                        AllowedGrantTypes = GrantTypes.Code,
+                        // "Proof Key for Code Exchange" - way to make OAuth 2.0 and OpenID Connect operations using an authorization code more secure
+                        // applies to authorization/token requests whenever code grant type is involved
+                        RequirePkce = true,
+                        RequireClientSecret = false,
+
+                        RedirectUris = {"https://localhost:5003/callback.html"},
+                        PostLogoutRedirectUris = {"https://localhost:5003/index.html"},
+                        // TODO - always use current address (add additional for local dev CORS)
+                        AllowedCorsOrigins = {"https://localhost:5003"},
+
+                        // scopes the client has access to
+                        AllowedScopes = { IdentityServerConstants.StandardScopes.OpenId, IdentityServerConstants.LocalApi.ScopeName }
+                    }
+
+                    // TODO - Google Auth?
+                })
                 // http://docs.identityserver.io/en/latest/topics/resources.html#defining-api-resources
                 // to allow clients to request access tokens for your APIs you need to define API resources
                 // to get access tokesn for APIs you need to register them as a scope
@@ -120,6 +167,7 @@ namespace webapp
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseStaticFiles(); // allow reference to static files in wwwroot
+            app.UseIdentityServer();
 
             // server files outside of web root
             app.UseStaticFiles(new StaticFileOptions
