@@ -19,7 +19,7 @@ namespace webapp.Services.Assets
     {
         private readonly IHostingEnvironment env;
         private readonly IDistributedCache distributedCache;
-        private readonly AssetsConfiguration assetsConfiguration;
+        private readonly AppConfig appConfiguration;
         private readonly SettingsService settingsService;
         private readonly IStorageService storageService;
         private AsyncLazy<AssetVersion> lastUpdatedVersion;
@@ -27,12 +27,12 @@ namespace webapp.Services.Assets
         private AsyncLazy<AssetVersion> publishedVersion;
         private readonly AsyncLazy<bool?> isCDNEnabled;
 
-        public AbstractAssetService(IHostingEnvironment env, IDistributedCache distributedCache, AssetsConfiguration assetsConfiguration, SettingsService settingsService, 
+        public AbstractAssetService(IHostingEnvironment env, IDistributedCache distributedCache, AppConfig appConfiguration, SettingsService settingsService, 
             IStorageService storageService)
         {
             this.env = env;
             this.distributedCache = distributedCache;
-            this.assetsConfiguration = assetsConfiguration;
+            this.appConfiguration = appConfiguration;
             this.settingsService = settingsService;
             this.storageService = storageService;
             this.lastUpdatedVersion = GetLazyVersion(AppConstants.CacheKeys.lastUpdatedVersion);
@@ -120,13 +120,13 @@ namespace webapp.Services.Assets
 
         public string GetCDNHost()
         {
-            return assetsConfiguration.CDNHost;
+            return appConfiguration.Assets.CDNHost;
         }
 
         public async Task<bool> IsCDNEnabled()
         {
             var cdnEnabled = await isCDNEnabled;
-            return cdnEnabled.GetValueOrDefault(assetsConfiguration.IsCDNEnabled);
+            return cdnEnabled.GetValueOrDefault(appConfiguration.Assets.IsCDNEnabled);
         }
 
         protected string GetClientPath(string assetsVersion = null)

@@ -277,3 +277,6 @@ secret.tfvars
 # Frontend distribution
 /webapp/ClientApp/dist
 deploy-assets/dist
+
+# keys
+*.rsa

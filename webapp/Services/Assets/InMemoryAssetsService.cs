@@ -23,7 +23,7 @@ namespace webapp.Services.Assets
         private readonly IHttpContextAccessor httpContextAccessor;
 
         public InMemoryAssetsService(IHostingEnvironment env, IDistributedCache distributedCache, SettingsService settingsService, IStorageService storageService, 
-            AssetsConfiguration assetsConfiguration, IHttpContextAccessor httpContextAccessor) : base(env, distributedCache, assetsConfiguration, settingsService, storageService)
+            AppConfig appConfiguration, IHttpContextAccessor httpContextAccessor) : base(env, distributedCache, appConfiguration, settingsService, storageService)
         {
             this.distributedCache = distributedCache;
             this.settingsService = settingsService;

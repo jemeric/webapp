@@ -15,28 +15,28 @@ namespace webapp.Services.Storage
     {
         //AmazonS3Config
         private readonly IAmazonS3 s3Client;
-        private readonly S3Configuration config;
+        private readonly AppConfig config;
 
-        public S3StorageService(S3Configuration config)
+        public S3StorageService(AppConfig config)
         {
             // https://www.digitalocean.com/community/questions/how-to-use-digitalocean-spaces-with-the-aws-s3-sdks?answer=44888
             AmazonS3Config clientConfig = new AmazonS3Config();
-            clientConfig.ServiceURL = config.Host;
-            s3Client = new AmazonS3Client(config.AccessKey, config.SecretKey, clientConfig);
+            clientConfig.ServiceURL = config.S3.Host;
+            s3Client = new AmazonS3Client(config.S3.AccessKey, config.S3.SecretKey, clientConfig);
             this.config = config;
         }
 
         public async Task Copy(string fromDir, string toDir)
         {
             var fileTransferUtility = new TransferUtility(s3Client);
-            await fileTransferUtility.DownloadDirectoryAsync(config.Bucket, fromDir, toDir);
+            await fileTransferUtility.DownloadDirectoryAsync(config.S3.Bucket, fromDir, toDir);
         }
 
         public async Task<bool> Exists(string fileOrDir)
         {
             var request = new ListObjectsRequest
             {
-                BucketName = config.Bucket,
+                BucketName = config.S3.Bucket,
                 Prefix = fileOrDir,
                 MaxKeys = 1
             };

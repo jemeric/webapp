@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace webapp.Util.Dto.Configuration
 {
-    public class S3Configuration
+    public class S3Config
     {
         public String Host { get; set; }
         public String Bucket { get; set; }

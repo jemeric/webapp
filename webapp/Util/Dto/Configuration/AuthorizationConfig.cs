@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace webapp.Util.Dto.Configuration
 {
-    public class AssetsConfiguration
+    public class AuthorizationConfig
     {
-        public string CDNHost { get; set; }
-        public bool IsCDNEnabled { get; set; }
+        public string ClientHostUrl { get; set; }
+        public string Secret { get; set; }
     }
 }
