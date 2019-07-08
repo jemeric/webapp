@@ -26,7 +26,7 @@ function getTemplate(app: string, styles: string, data: IAppData): string {
                   data.assetsVersion
                 }/main-client.js"></script>
                 <script type="text/javascript">
-                  initializeAppClient(${JSON.stringify(data.authContextData)});
+                  initializeAppClient(${JSON.stringify(data.authorizationContext)});
                 </script>
             </body>`;
 }
@@ -34,7 +34,7 @@ function getTemplate(app: string, styles: string, data: IAppData): string {
 interface IAppData {
   externalScripts: string[];
   assetsVersion: string;
-  authContextData: IAuthContextData;
+  authorizationContext: IAuthContextData;
 }
 
 export default createServerRenderer(params => {
@@ -46,7 +46,7 @@ export default createServerRenderer(params => {
     // see styled components server-side rendering - https://www.styled-components.com/docs/advanced#server-side-rendering
     const sheet = new ServerStyleSheet();
 
-    const authContext: AuthContext = new AuthContext(data.authContextData);
+    const authContext: AuthContext = new AuthContext(data.authorizationContext);
     const Context = React.createContext(authContext);
 
     // static router = a router that never changes location (on server-side render things won't change)

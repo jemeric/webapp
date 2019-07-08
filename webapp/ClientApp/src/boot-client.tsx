@@ -39,3 +39,7 @@ function initializeAppClient(authContextData: IAuthContextData) {
     });
   }
 }
+
+// must cast as any to set property on window
+const _global = (window /* browser */ || global /* node */) as any
+_global.initializeAppClient = initializeAppClient;
