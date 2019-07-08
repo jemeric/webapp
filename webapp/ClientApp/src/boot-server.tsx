@@ -24,6 +24,25 @@ function getTemplate(app: string, styles: string, data: IAppData): string {
 interface IAppData {
   externalScripts: string[];
   assetsVersion: string;
+  authContextData: IAuthContextData;
+}
+
+interface IAuthContextData {
+  authenticated: boolean; // to check if authenticated or not
+  user: IUserContext; // store all the user details
+  accessToken: string | null; // accessToken of user for authorization (To-Do - change with cookie auth?)  
+}
+
+interface IAuthContext extends IAuthContextData {
+  initiateLogin: () => {}; // start the login process
+  handleAuthentication: () => {}; // handle login process
+  logout: () => {}; // logout the user
+}
+
+interface IUserContext {
+  id: string; // data.sub
+  email: string | null;
+  role: "ADMIN" | "USER" | "GUEST";
 }
 
 export default createServerRenderer(params => {
@@ -35,11 +54,16 @@ export default createServerRenderer(params => {
     // see styled components server-side rendering - https://www.styled-components.com/docs/advanced#server-side-rendering
     const sheet = new ServerStyleSheet();
 
+    const user : IUserContext = {id: "test", email: "test@example.com", role: "admin"};
+    const Context = React.createContext(user);
+
     // static router = a router that never changes location (on server-side render things won't change)
     const app = (
-      <StaticRouter context={routerContext} location={params.location.path}>
-        <App compiler="Typescript" framework="React" />
-      </StaticRouter>
+      <Context.Provider value={user}>
+        <StaticRouter context={routerContext} location={params.location.path}>
+          <App compiler="Typescript" framework="React" />
+        </StaticRouter>
+      </Context.Provider>
     );
 
     // If there's a redirection, just send this information back to the host application
@@ -50,7 +74,7 @@ export default createServerRenderer(params => {
 
     const html = renderToString(sheet.collectStyles(app));
 
-    // TODO - we need to get this into the document head
+    // need to get this into the document head for styled components
     const styleTags = sheet.getStyleTags();
 
     // once any async tasks are done, we can perform the final render

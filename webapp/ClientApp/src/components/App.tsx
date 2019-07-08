@@ -15,7 +15,7 @@ interface IAppState {
 
 // export const Hello = (props: HelloProps) => <h1>Hello from {props.compiler} and {props.framework}!</h1>;
 
-const Title = styled.h1`
+const Title = styled.h1<any>`
   font-size: 1.5em;
   text-align: center;
   color: palevioletred;
@@ -25,6 +25,11 @@ const HomePage = () => <div>Home Page</div>;
 const UsersPage = () => <div>Users Page</div>;
 
 export class App extends React.Component<IAppProps, IAppState> {
+
+  constructor(props: any) {
+    super(props);
+  }
+
   public state: IAppState = {
     sideDrawerOpen: false
   };
@@ -53,6 +58,11 @@ export class App extends React.Component<IAppProps, IAppState> {
         <main style={{ marginTop: "64px" }}>
           <Title>Styled Component</Title>
           <p>This is the page content!</p>
+
+          <button className="btn btn-primary btn-login" style={{ margin: '10px' }}>
+            Login
+          </button>
+
           {/* use switch for exclusive routing - just 1 match */}
           <Switch>
             <Route path="/" exact component={HomePage} />
