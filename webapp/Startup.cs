@@ -24,6 +24,7 @@ using webapp.Util;
 using IdentityServer4.Models;
 using IdentityServer4;
 using webapp.Util.Helpers;
+using webapp.Services.Authorization;
 
 namespace webapp
 {
@@ -52,6 +53,7 @@ namespace webapp
             // setup dependencies for injection here
             services.AddSingleton<NPMManagerService>();
             services.AddScoped<SettingsService>();
+            services.AddTransient<AuthorizationService>();
             services.AddTransient<IStorageService, S3StorageService>();
             ConfigureCaching(services, appConfig);
 

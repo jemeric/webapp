@@ -4,15 +4,21 @@ import * as ReactDOM from "react-dom";
 import { AppContainer } from "react-hot-loader";
 import { App } from "./components/App";
 import { BrowserRouter } from "react-router-dom";
+import { AuthContext, IAuthContextData } from "./auth-context";
 
-function renderApp() {
+function renderApp(authContextData: IAuthContextData) {
+  const authContext: AuthContext = new AuthContext(authContextData);
+  const Context = React.createContext(authContext);
+
   // This code starts up the React app when it runs in a browser.
   const newLocal = (
-    <AppContainer>
-      <BrowserRouter>
-        <App compiler="Typescript" framework="React" />
-      </BrowserRouter>
-    </AppContainer>
+    <Context.Provider value={authContext}>
+      <AppContainer>
+        <BrowserRouter>
+          <App compiler="Typescript" framework="React" />
+        </BrowserRouter>
+      </AppContainer>
+    </Context.Provider>
   );
   const appTag = document.getElementById("appId");
   // only hydrate if there is something to be hydrated (may not be the case in local dev)
@@ -23,13 +29,13 @@ function renderApp() {
   }
 }
 
-function initialize(authContext: any) {
-  renderApp();
-  
+function initializeAppClient(authContextData: IAuthContextData) {
+  renderApp(authContextData);
+
   // Allow Hot Module Replacement
   if (module.hot) {
     module.hot.accept(() => {
-      renderApp();
+      renderApp(authContextData);
     });
   }
 }
