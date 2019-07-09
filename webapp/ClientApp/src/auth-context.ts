@@ -1,7 +1,15 @@
+import * as React from "react";
+
+enum UserRole {
+    ADMIN,
+    USER,
+    GUEST
+}
+
 export interface IUserContext {
   id: string; // data.sub
   email: string | null;
-  role: "ADMIN" | "USER" | "GUEST";
+  role: UserRole;
 }
 
 export interface IAuthContextData {
@@ -29,3 +37,5 @@ export class AuthContext implements IAuthContextData {
     // logout the user
   }
 }
+
+export const {Provider, Consumer} = React.createContext<AuthContext | null>(null);

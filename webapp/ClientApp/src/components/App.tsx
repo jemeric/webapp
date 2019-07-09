@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Backdrop from "./navigation/Backdrop/Backdrop";
 import Toolbar from "./navigation/Toolbar/Toolbar";
 import SideDrawer from "./navigation/SideDrawer/SideDrawer";
+import { Consumer } from "../auth-context";
 
 export interface IAppProps {
   compiler: string;
@@ -59,9 +60,17 @@ export class App extends React.Component<IAppProps, IAppState> {
           <Title>Styled Component</Title>
           <p>This is the page content!</p>
 
-          <button className="btn btn-primary btn-login" style={{ margin: '10px' }}>
-            Login
-          </button>
+          <Consumer>
+            {auth => auth && (
+              auth.authenticated ? (
+                <button className="btn btn-primary btn-login" style={{ margin: '10px' }}>
+                  Login {auth.user.role}
+                </button>
+              ) : (
+                <div>Not Authenticated {auth.user.role}</div>
+              )
+            )}
+          </Consumer>
 
           {/* use switch for exclusive routing - just 1 match */}
           <Switch>

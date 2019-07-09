@@ -4,21 +4,20 @@ import * as ReactDOM from "react-dom";
 import { AppContainer } from "react-hot-loader";
 import { App } from "./components/App";
 import { BrowserRouter } from "react-router-dom";
-import { AuthContext, IAuthContextData } from "./auth-context";
+import { Provider, AuthContext, IAuthContextData } from "./auth-context";
 
 function renderApp(authContextData: IAuthContextData) {
   const authContext: AuthContext = new AuthContext(authContextData);
-  const Context = React.createContext(authContext);
 
   // This code starts up the React app when it runs in a browser.
   const newLocal = (
-    <Context.Provider value={authContext}>
+    <Provider value={authContext}>
       <AppContainer>
         <BrowserRouter>
           <App compiler="Typescript" framework="React" />
         </BrowserRouter>
       </AppContainer>
-    </Context.Provider>
+    </Provider>
   );
   const appTag = document.getElementById("appId");
   // only hydrate if there is something to be hydrated (may not be the case in local dev)

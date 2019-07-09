@@ -4,7 +4,7 @@ import { renderToString } from "react-dom/server";
 import { StaticRouter } from "react-router-dom";
 import { App } from "./components/App";
 import { ServerStyleSheet } from "styled-components";
-import { AuthContext, IAuthContextData } from "./auth-context";
+import { Provider, AuthContext, IAuthContextData } from "./auth-context";
 
 // todo isolate and cache server-side template for easier development
 function getTemplate(app: string, styles: string, data: IAppData): string {
@@ -51,11 +51,11 @@ export default createServerRenderer(params => {
 
     // static router = a router that never changes location (on server-side render things won't change)
     const app = (
-      <Context.Provider value={authContext}>
+      <Provider value={authContext}>
         <StaticRouter context={routerContext} location={params.location.path}>
           <App compiler="Typescript" framework="React" />
         </StaticRouter>
-      </Context.Provider>
+      </Provider>
     );
 
     // If there's a redirection, just send this information back to the host application
