@@ -15,7 +15,12 @@ function getTemplate(app: string, styles: string, data: IAppData): string {
                   data.assetsVersion
                 }/style.css">
                 ${styles}
-            </head>
+                <script type="text/javascript">
+                  window.authorizationContext = ${JSON.stringify(
+                    data.authorizationContext
+                  )};
+                </script>
+                </head>
             <body>
                 <div id="appId">${app}</div>
                 ${data.externalScripts
@@ -25,9 +30,6 @@ function getTemplate(app: string, styles: string, data: IAppData): string {
                 <script src="/dist/${
                   data.assetsVersion
                 }/main-client.js"></script>
-                <script type="text/javascript">
-                  initializeAppClient(${JSON.stringify(data.authorizationContext)});
-                </script>
             </body>`;
 }
 

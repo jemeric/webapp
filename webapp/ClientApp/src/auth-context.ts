@@ -1,6 +1,6 @@
 import * as React from "react";
 
-enum UserRole {
+export enum UserRole {
     ADMIN,
     USER,
     GUEST

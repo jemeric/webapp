@@ -35,6 +35,6 @@
     "wwwroot"
   ],
   "include": [
-    "src"
+    "src", "src/boot-client.tsx", "src/boot-server.tsx"
   ]
 }

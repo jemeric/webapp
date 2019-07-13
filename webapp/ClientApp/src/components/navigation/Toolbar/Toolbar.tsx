@@ -23,7 +23,7 @@ const Toolbar = (props: IToolbarProps) => (
         <ul>
           <li>
             <NavLink to="/" exact>
-              Home
+              Home3
             </NavLink>
           </li>
           <li>
