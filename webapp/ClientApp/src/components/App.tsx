@@ -4,7 +4,7 @@ import styled from "styled-components";
 import Backdrop from "./navigation/Backdrop/Backdrop";
 import Toolbar from "./navigation/Toolbar/Toolbar";
 import SideDrawer from "./navigation/SideDrawer/SideDrawer";
-import { Consumer } from "../auth-context";
+import { Consumer, UserRole } from "../auth-context";
 
 export interface IAppProps {
   compiler: string;
@@ -63,11 +63,13 @@ export class App extends React.Component<IAppProps, IAppState> {
           <Consumer>
             {auth => auth && (
               auth.authenticated ? (
-                <button className="btn btn-primary btn-login" style={{ margin: '10px' }}>
-                  Login {auth.user.role}
-                </button>
+                <form method="POST" action="logout">
+                  <button className="btn btn-primary btn-login" style={{ margin: '10px' }}>
+                    Logout {UserRole[auth.user.role]}
+                  </button>
+                </form>
               ) : (
-                <div>Not Authenticated {auth.user.role}</div>
+                <div>Not Authenticated {UserRole[auth.user.role]}</div>
               )
             )}
           </Consumer>

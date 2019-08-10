@@ -23,6 +23,7 @@
     <Folder Include="Assets\GraphQL\" />
     <Folder Include="ClientApp\dist\" />
     <Folder Include="ClientApp\public\" />
+    <Folder Include="Util\Helpers\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,7 +32,6 @@
     <PackageReference Include="HotChocolate.AspNetCore" Version="0.8.2" />
     <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="0.8.2" />
     <PackageReference Include="HotChocolate.AspNetCore.Playground" Version="0.8.2" />
-    <PackageReference Include="IdentityServer4" Version="2.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.0.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.0.0" />

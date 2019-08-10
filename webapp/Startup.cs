@@ -21,10 +21,8 @@ using webapp.Util.Dto.Configuration;
 using webapp.Services.Storage;
 using Microsoft.AspNetCore.HttpOverrides;
 using webapp.Util;
-using IdentityServer4.Models;
-using IdentityServer4;
-using webapp.Util.Helpers;
 using webapp.Services.Authorization;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace webapp
 {
@@ -53,14 +51,14 @@ namespace webapp
             // setup dependencies for injection here
             services.AddSingleton<NPMManagerService>();
             services.AddScoped<SettingsService>();
-            services.AddTransient<AuthorizationService>();
+            services.AddScoped<AuthorizationService>();
             services.AddTransient<IStorageService, S3StorageService>();
             ConfigureCaching(services, appConfig);
 
             services.AddMvc();
-            ConfigureIdentityServer(services, appConfig);
-
-            // https://stackoverflow.com/a/53577368/4586866
+            ConfigureAuthentication(services, appConfig);
+            
+            // using context accessor to get current host https://stackoverflow.com/a/53577368/4586866
             services.AddHttpContextAccessor();
 
             ConfiguratGraphQL(services);
@@ -91,27 +89,19 @@ namespace webapp
             services.AddGraphQL(schema);
         }
 
-        private void ConfigureIdentityServer(IServiceCollection services, AppConfig appConfig)
+        private void ConfigureAuthentication(IServiceCollection services, AppConfig appConfig)
         {
-            // configure this as an identity server
-            IIdentityServerBuilder identityServerBuilder = services.AddIdentityServer()
-                .AddInMemoryIdentityResources(IdentityConfigHelpers.IdentityResources)
-                .AddInMemoryClients(IdentityConfigHelpers.GetClients(appConfig))
-                .AddInMemoryApiResources(IdentityConfigHelpers.Apis);
-
-            if (env.IsDevelopment())
+            // See https://www.c-sharpcorner.com/article/authentication-and-authorization-in-asp-net-core-mvc-using-cookie/
+            // use same-server cookies to secure SPA https://leastprivilege.com/2019/01/18/an-alternative-way-to-secure-spas-with-asp-net-core-openid-connect-oauth-2-0-and-proxykit/
+            services.Configure<CookiePolicyOptions>(options =>
             {
-                identityServerBuilder.AddDeveloperSigningCredential();
-                identityServerBuilder.AddTestUsers(TestUsers.Users);
-            }
-            else
-            {
-                // TO-DO https://codereview.stackexchange.com/a/189583 (AddSigningCredential)
-            }
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.Strict;
+            });
 
-            // adding support for local APIs (on the same server as identity server)
-            // see http://docs.identityserver.io/en/latest/topics/add_apis.html - protect with Authorize(LocalApi.PolicyName)
-            services.AddLocalApiAuthentication();
+            // create authentication middleware service (AuthenticationScheme sets the default authentication scheme for the app - useful when multiple instances of cookie auth)
+            // the constant below sets it to "Cookies" but you can provide any string value that distinguishes the scheme
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
         }
 
         private T BindConfig<T>(string bindToConfigName) where T : new()
@@ -125,7 +115,10 @@ namespace webapp
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseStaticFiles(); // allow reference to static files in wwwroot
-            app.UseIdentityServer();
+
+            // invokes the authentication middleware that sets the HttpContext.User property
+            app.UseCookiePolicy();
+            app.UseAuthentication();
 
             // server files outside of web root
             app.UseStaticFiles(new StaticFileOptions
