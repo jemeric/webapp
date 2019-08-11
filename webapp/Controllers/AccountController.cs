@@ -7,11 +7,19 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using webapp.Models.Settings.Authorization;
+using webapp.Services.Assets;
 
 namespace webapp.Controllers
 {
     public class AccountController : Controller
     {
+        private readonly IAssetsService assetsService;
+
+        public AccountController(IAssetsService assetsService)
+        {
+            this.assetsService = assetsService;
+        }
+
         [HttpGet("login")]
         public IActionResult Login()
         {
@@ -19,9 +27,10 @@ namespace webapp.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login(string username, string password)
+        public async Task<IActionResult> Login(string username, string password)
         {
-            if(!string.IsNullOrEmpty(username) && string.IsNullOrEmpty(password))
+            string currentVersion = await assetsService.GetCurrentVersion();
+            if (!string.IsNullOrEmpty(username) && string.IsNullOrEmpty(password))
             {
                 return RedirectToAction("Login");
             }
@@ -42,7 +51,7 @@ namespace webapp.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            return View();
+            return View(currentVersion);
         }
 
         [HttpPost("logout")]

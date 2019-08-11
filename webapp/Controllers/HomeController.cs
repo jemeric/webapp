@@ -29,8 +29,8 @@ namespace webapp.Controllers
         public async Task<IActionResult> Index()
         {
             Task<List<NPMExternal>> externals = npmManagerService.GetExternals();
-            Task<AssetVersion> publishedVersionTask = assetsService.GetPublishedVersion();
-            await Task.WhenAll(externals, publishedVersionTask);
+            Task<string> currentVersionTask = assetsService.GetCurrentVersion();
+            await Task.WhenAll(externals, currentVersionTask);
 
             List<Task<string>> externalModulePaths = new List<Task<string>>();
             foreach(NPMExternal external in externals.Result)
@@ -38,9 +38,8 @@ namespace webapp.Controllers
                 externalModulePaths.AddRange(external.Assets.Select(asset => npmManagerService.GetNPMModule(external, asset.ProductionPath, asset.DevelopmentPath)));
             }
 
-            string version = publishedVersionTask.Result != null ? publishedVersionTask.Result.Version : AppConstants.Assets.defaultAssetVersion;
             var context = authorizationService.GetAuthorizationContext();
-            return View(new AppData(await Task.WhenAll(externalModulePaths), version, context));
+            return View(new AppData(await Task.WhenAll(externalModulePaths), currentVersionTask.Result, context));
         }
     }
 }

@@ -2,6 +2,7 @@
 const path = require("path");
 const merge = require("webpack-merge");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 const defaultOutput = "./dist";
 
@@ -14,11 +15,13 @@ module.exports = env => {
   // TODO - turns out this cleanup breaks the ASP.NET server-side rendering (not including it for default path for now)
   const doCleanBuild = isOutputOverride || !isDevBuild;
   const cssPlugin = new MiniCssExtractPlugin({
-    filename: "style.css"
+    filename: "[name].css"
   });
+  // fix to remove extra unwanted js file by having css entry points (https://github.com/fqborges/webpack-fix-style-only-entries)
+  // might already be fixed in webpack 5?
   const clientPlugins = doCleanBuild
-    ? [new CleanWebpackPlugin(), cssPlugin]
-    : [cssPlugin]; // cleanup files in dist before doing build
+    ? [new CleanWebpackPlugin(), cssPlugin, new FixStyleOnlyEntriesPlugin()]
+    : [cssPlugin, new FixStyleOnlyEntriesPlugin()]; // cleanup files in dist before doing build
   const serverPlugins = doCleanBuild ? [new CleanWebpackPlugin()] : [];
 
   const externals = NPMExternals.reduce(
@@ -62,7 +65,11 @@ module.exports = env => {
   });
 
   const clientBundleConfig = merge(sharedConfig(), {
-    entry: { "main-client": "./src/boot-client.tsx" },
+    entry: { 
+      "main-client": "./src/boot-client.tsx", 
+      "style": "./src/components/app.scss",
+      "login": "./src/styles/login.scss"
+    },
     output: {
       //path: path.join(__dirname, "../wwwroot/dist")
       path: path.join(__dirname, outputPath, clientAssetPath)

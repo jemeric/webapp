@@ -78,6 +78,12 @@ namespace webapp.Services.Assets
             return await previouslyPublishedVersion;
         }
 
+        public async Task<string> GetCurrentVersion()
+        {
+            AssetVersion publishedVersion = await GetPublishedVersion();
+            return publishedVersion != null ? publishedVersion.Version : AppConstants.Assets.defaultAssetVersion;
+        }
+
         protected async Task SetPublishedVersion(AssetVersion version)
         {
             // don't allow the publishing of a version that hasn't been installed on all instances
