@@ -26,8 +26,7 @@ namespace webapp.Services.Authorization
             var user = context.User;
             bool isAuthenticated = user.Identity.IsAuthenticated;
 
-            var claimRole = user.FindFirst(ClaimTypes.Role)?.Value;
-            UserRole role = claimRole == null ? UserRole.GUEST : Enum.Parse<UserRole>(claimRole);
+            var role = user.FindFirst(ClaimTypes.Role)?.Value ?? UserRole.Guest;
 
             UserContext userContext = new UserContext(user.Identity.Name, null, role);
             return new AuthorizationContext(isAuthenticated, userContext);

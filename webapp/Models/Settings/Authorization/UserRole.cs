@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace webapp.Models.Settings.Authorization
 {
-    public enum UserRole
+    public static class UserRole
     {
-        ADMIN,
-        USER,
-        GUEST
+        public const string Admin = "Admin";
+        public const string User = "User";
+        public const string Guest = "Guest";
     }
 }

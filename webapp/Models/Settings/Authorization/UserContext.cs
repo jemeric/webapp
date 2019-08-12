@@ -9,9 +9,9 @@ namespace webapp.Models.Settings.Authorization
     {
         public string Id { get; }
         public string Email { get; }
-        public UserRole Role { get; }
+        public string Role { get; }
 
-        public UserContext(string id, string email, UserRole role)
+        public UserContext(string id, string email, string role)
         {
             Id = id;
             Email = email;

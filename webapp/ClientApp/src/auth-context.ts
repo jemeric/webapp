@@ -9,7 +9,7 @@ export enum UserRole {
 export interface IUserContext {
   id: string; // data.sub
   email: string | null;
-  role: UserRole;
+  role: "Admin" | "User" | "Guest";
 }
 
 export interface IAuthContextData {

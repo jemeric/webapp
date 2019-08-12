@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using webapp.Models.Settings.Authorization;
 using webapp.Services.Assets;
+using webapp.Util.Dto.Views;
 
 namespace webapp.Controllers
 {
@@ -21,9 +22,10 @@ namespace webapp.Controllers
         }
 
         [HttpGet("login")]
-        public IActionResult Login()
+        public async Task<IActionResult> Login()
         {
-            return View();
+            string currentVersion = await assetsService.GetCurrentVersion();
+            return View(new LoginData(currentVersion));
         }
 
         [HttpPost("login")]
@@ -40,7 +42,7 @@ namespace webapp.Controllers
                 var identity = new ClaimsIdentity(new[]
                 {
                    new Claim(ClaimTypes.Name, username),
-                   new Claim(ClaimTypes.Role, UserRole.ADMIN.ToString())
+                   new Claim(ClaimTypes.Role, UserRole.Admin)
                 }, CookieAuthenticationDefaults.AuthenticationScheme);
 
                 var principal = new ClaimsPrincipal(identity);
@@ -51,7 +53,7 @@ namespace webapp.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            return View(currentVersion);
+            return View(new LoginData(currentVersion));
         }
 
         [HttpPost("logout")]

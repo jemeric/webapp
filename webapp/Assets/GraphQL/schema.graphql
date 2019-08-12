@@ -2,19 +2,19 @@ scalar DateTime
 scalar Long
 scalar TimeSpan
 
-type Query @authorize {
-    settings(): AppSettings!
+type Query {
+    settings() : AppSettings! @authorize(roles: "Admin")
 }
 
 type Mutation {
     # change the current time
-    changeClockOffset(offset: TimeSpan!) : AppClock!
+    changeClockOffset(offset: TimeSpan!) : AppClock! @authorize(roles: "Admin")
     # request all instances download the given asset version
-    updateAssetsVersion(assetsVersion: String!) : AssetConfig!
+    updateAssetsVersion(assetsVersion: String!) : AssetConfig! @authorize(roles: "Admin")
     # publish the given asset version (availableVersion if null)
-    publishVersion(assetsVersion: String) : AssetConfig!
+    publishVersion(assetsVersion: String) : AssetConfig! @authorize(roles: "Admin")
     # toggle loading client-side assets from cdn or directly from instance
-    toggleAssetCDN(enable: Boolean!): AssetConfig!
+    toggleAssetCDN(enable: Boolean!) : AssetConfig! @authorize(roles: "Admin")
 }
 
 type AppSettings {

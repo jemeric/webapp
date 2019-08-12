@@ -1,17 +1,17 @@
-﻿@model string
+﻿@model webapp.Util.Dto.Views.LoginData
 <html>
-    <head>
-        <title>App -Login</title>
-        <link rel="stylesheet" type="text/css" href="/dist/@Model/login.css" />
-    </head>
-    <body>
-        <div class="log-form">
-            <h2>Login to your account</h2>
-            <form asp-action="login" method="post">
-                <input type="text" title="username" placeholder="username" />
-                <input type="password" title="username" placeholder="password" />
-                <button type="submit" class="btn">Login</button>
-            </form>
-        </div>
-    </body>
+<head>
+    <title>App -Login</title>
+    <link rel="stylesheet" type="text/css" href="/dist/@Model.AssetsVersion/login.css" />
+</head>
+<body>
+    <div class="log-form">
+        <h2>Login to your account</h2>
+        <form asp-action="Login" method="post">
+            <input type="text" name="username" placeholder="username" />
+            <input type="password" name="password" placeholder="password" />
+            <button type="submit" class="btn">Login</button>
+        </form>
+    </div>
+</body>
 </html>
