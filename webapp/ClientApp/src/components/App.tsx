@@ -5,6 +5,7 @@ import Backdrop from "./navigation/Backdrop/Backdrop";
 import Toolbar from "./navigation/Toolbar/Toolbar";
 import SideDrawer from "./navigation/SideDrawer/SideDrawer";
 import { Consumer } from "../auth-context";
+import { Header } from "./navigation2/Header";
 
 export interface IAppProps {
   compiler: string;
@@ -53,10 +54,11 @@ export class App extends React.Component<IAppProps, IAppState> {
     }
     return (
       <div style={{ height: "100%" }}>
-        <Toolbar drawerClickHandler={this.drawerToggleClickHandler} />
+        <Header drawerClickHandler={this.drawerToggleClickHandler} />
+        {/*<Toolbar drawerClickHandler={this.drawerToggleClickHandler} />*/}
         <SideDrawer show={this.state.sideDrawerOpen} />
         {backdrop}
-        <main style={{ marginTop: "64px" }}>
+        <main>
           <Title>Styled Component</Title>
           <p>This is the page content!</p>
 

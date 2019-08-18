@@ -31,6 +31,23 @@ const Toolbar = (props: IToolbarProps) => (
               Users
             </NavLink>
           </li>
+          <li>
+            <a href="#">
+              Account
+            </a>
+            <ul className="nav-dropdown">
+              <li>
+                <a href="/playground">
+                  GraphQL
+                </a>
+              </li>
+              <li>
+                <a href="/playground">
+                  Logout
+                </a>
+              </li>
+            </ul>
+          </li>
         </ul>
       </div>
     </nav>
