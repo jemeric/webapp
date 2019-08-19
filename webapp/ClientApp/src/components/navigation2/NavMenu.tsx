@@ -2,8 +2,8 @@ import * as React from "react";
 import { NavItem } from "./NavItem";
 import { NavLink } from "react-router-dom";
 
-interface IToolbarProps {
-  drawerClickHandler: () => void;
+interface INavMenuProps {
+  shouldCloseNavItem: (event: MouseEvent) => boolean;
 }
 
 interface INavMenuState {
@@ -11,7 +11,7 @@ interface INavMenuState {
   selectedNavId: string | null;
 }
 
-export class NavMenu extends React.Component<IToolbarProps, INavMenuState> {
+export class NavMenu extends React.Component<INavMenuProps, INavMenuState> {
   private wrapperRef: HTMLElement | null = null;
   constructor(props: any) {
     super(props);
@@ -33,7 +33,12 @@ export class NavMenu extends React.Component<IToolbarProps, INavMenuState> {
   };
 
   private handleClickOutside = (event: MouseEvent) => {
-    if (this.wrapperRef && !this.wrapperRef.contains(event.target as any)) {
+    // we also allow check with the parent (shouldCloseNavItem) to see if anything should block it there (e.g. toggling mobile nav)
+    if (
+      this.wrapperRef &&
+      !this.wrapperRef.contains(event.target as any) &&
+      this.props.shouldCloseNavItem(event)
+    ) {
       this.setState({ selectedNavId: null });
     }
   };

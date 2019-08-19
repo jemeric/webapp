@@ -23,7 +23,6 @@ export class NavItem extends React.Component<INavItemProps, INavItemState> {
   };
 
   private subNavClickHandler = () => {
-    // this.setState({ subNavOpen: !this.state.subNavOpen });
     this.props.selectNavItem(this.props.navId);
   };
 
