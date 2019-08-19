@@ -1,5 +1,6 @@
 import * as React from "react";
 import { NavItem } from "./NavItem";
+import { NavLink } from "react-router-dom";
 
 interface IToolbarProps {
   drawerClickHandler: () => void;
@@ -11,10 +12,31 @@ interface INavMenuState {
 }
 
 export class NavMenu extends React.Component<IToolbarProps, INavMenuState> {
+  private wrapperRef: HTMLElement | null = null;
   constructor(props: any) {
     super(props);
     this.selectNavItem = this.selectNavItem.bind(this);
+    this.setWrapperRef = this.setWrapperRef.bind(this);
+    this.handleClickOutside = this.handleClickOutside.bind(this);
   }
+
+  public componentDidMount() {
+    document.addEventListener("mousedown", this.handleClickOutside);
+  }
+
+  public componentWillUnmount() {
+    document.removeEventListener("mousedown", this.handleClickOutside);
+  }
+
+  private setWrapperRef = (node: HTMLElement) => {
+    this.wrapperRef = node;
+  };
+
+  private handleClickOutside = (event: MouseEvent) => {
+    if (this.wrapperRef && !this.wrapperRef.contains(event.target as any)) {
+      this.setState({ selectedNavId: null });
+    }
+  };
 
   public state: INavMenuState = {
     sideDrawerOpen: false,
@@ -28,7 +50,7 @@ export class NavMenu extends React.Component<IToolbarProps, INavMenuState> {
   public render() {
     const showStyle = { display: "none" };
     return (
-      <nav>
+      <nav ref={this.setWrapperRef}>
         <ul className="nav-list">
           <NavItem
             navId="home"

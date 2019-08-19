@@ -1,5 +1,4 @@
 import * as React from "react";
-import { NavLink } from "react-router-dom";
 
 interface INavItemProps {
   navId: string;
@@ -17,36 +16,7 @@ export class NavItem extends React.Component<INavItemProps, INavItemState> {
   constructor(props: any) {
     super(props);
     this.subNavClickHandler = this.subNavClickHandler.bind(this);
-    this.setWrapperRef = this.setWrapperRef.bind(this);
-    this.handleClickOutside = this.handleClickOutside.bind(this);
   }
-
-  public componentDidMount() {
-    document.addEventListener('mousedown', this.handleClickOutside);
-  }
-
-  public componentWillUnmount() {
-    document.removeEventListener('mousedown', this.handleClickOutside);
-  }
-
-//   componentDidMount() {
-//     
-//   }
-
-//   componentWillUnmount() {
-//     document.removeEventListener('mousedown', this.handleClickOutside);
-//   }
-
-  private setWrapperRef = (node: any) => {
-    this.wrapperRef = node;
-  };
-
-  private handleClickOutside = (event: any) => {
-    if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
-      // alert("You clicked outside of me!");
-      global.console.log("CLICK OUTSIDE OF ME");
-    }
-  };
 
   public state: INavItemState = {
     subNavOpen: false
@@ -81,10 +51,6 @@ export class NavItem extends React.Component<INavItemProps, INavItemState> {
         : this.props.children;
 
     global.console.log("NavID: ", this.props.navId, this.props.selectedNavId);
-    return (
-      <li ref={this.setWrapperRef} onClick={this.subNavClickHandler}>
-        {navItem}
-      </li>
-    );
+    return <li onClick={this.subNavClickHandler}>{navItem}</li>;
   }
 }
