@@ -49,7 +49,12 @@ export class NavMenu extends React.Component<INavMenuProps, INavMenuState> {
   };
 
   private selectNavItem = (navId: string) => {
-    this.setState({ selectedNavId: navId });
+    if (this.state.selectedNavId === navId) {
+      // unset the navigation if null
+      this.setState({ selectedNavId: null });
+    } else {
+      this.setState({ selectedNavId: navId });
+    }
   };
 
   public render() {
