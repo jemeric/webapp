@@ -4,7 +4,7 @@ interface INavItemProps {
   navId: string;
   navTitle: string;
   selectedNavId: string | null;
-  selectNavItem: (navId: string) => void;
+  selectNavItem: (navId: string, hasChildren: boolean) => void;
 }
 
 interface INavItemState {
@@ -22,9 +22,13 @@ export class NavItem extends React.Component<INavItemProps, INavItemState> {
     subNavOpen: false
   };
 
-  private subNavClickHandler = () => {
-    this.props.selectNavItem(this.props.navId);
+  private navClickHandler = () => {
+    this.props.selectNavItem(this.props.navId, false);
   };
+
+  private subNavClickHandler = () => {
+    this.props.selectNavItem(this.props.navId, true);
+  }
 
   public render() {
     const subNavItems = React.Children.map(this.props.children, child => {
@@ -40,7 +44,7 @@ export class NavItem extends React.Component<INavItemProps, INavItemState> {
     const navItem =
       subNavItems.length > 1
         ? [
-            <a key="1">{this.props.navTitle}</a>,
+            <a onClick={this.subNavClickHandler} key="1">{this.props.navTitle}</a>,
             this.props.children && (
               <ul className="nav-dropdown" style={isSubNavShown} key="2">
                 {subNavItems}
@@ -49,7 +53,6 @@ export class NavItem extends React.Component<INavItemProps, INavItemState> {
           ]
         : this.props.children;
 
-    global.console.log("NavID: ", this.props.navId, this.props.selectedNavId);
-    return <li onClick={this.subNavClickHandler}>{navItem}</li>;
+    return <li onClick={this.navClickHandler}>{navItem}</li>;
   }
 }

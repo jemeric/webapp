@@ -7,36 +7,54 @@ interface INavMenuProps {
 }
 
 interface INavMenuState {
-  sideDrawerOpen: boolean;
+  screenWidth: number;
   selectedNavId: string | null;
 }
 
+const maxResponsiveWidth = 798;
+
 export class NavMenu extends React.Component<INavMenuProps, INavMenuState> {
-  private wrapperRef: HTMLElement | null = null;
+  private navRef: HTMLElement | null = null;
   constructor(props: any) {
     super(props);
     this.selectNavItem = this.selectNavItem.bind(this);
-    this.setWrapperRef = this.setWrapperRef.bind(this);
+    this.setNavRef = this.setNavRef.bind(this);
     this.handleClickOutside = this.handleClickOutside.bind(this);
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
   }
 
   public componentDidMount() {
+    // because this is loaded isomorphically we must wait until the client has loaded to check this
+    // rather than in setting the initial state
+    this.updateWindowDimensions();
+    window.addEventListener("resize", this.updateWindowDimensions);
     document.addEventListener("mousedown", this.handleClickOutside);
   }
 
   public componentWillUnmount() {
+    window.removeEventListener("resize", this.updateWindowDimensions);
     document.removeEventListener("mousedown", this.handleClickOutside);
   }
 
-  private setWrapperRef = (node: HTMLElement) => {
-    this.wrapperRef = node;
+  private isMobile(): boolean {
+    return this.state.screenWidth <= maxResponsiveWidth;
+  }
+
+  private updateWindowDimensions() {
+    global.console.log("RESIZE WINDOW????");
+    // TODO - setup global react hook for this?
+    this.setState({ screenWidth: window.innerWidth });
+  }
+
+  private setNavRef = (node: HTMLElement) => {
+    this.navRef = node;
   };
 
   private handleClickOutside = (event: MouseEvent) => {
     // we also allow check with the parent (shouldCloseNavItem) to see if anything should block it there (e.g. toggling mobile nav)
     if (
-      this.wrapperRef &&
-      !this.wrapperRef.contains(event.target as any) &&
+      this.navRef &&
+      !this.navRef.contains(event.target as any) &&
       this.props.shouldCloseNavItem(event)
     ) {
       this.setState({ selectedNavId: null });
@@ -44,11 +62,13 @@ export class NavMenu extends React.Component<INavMenuProps, INavMenuState> {
   };
 
   public state: INavMenuState = {
-    sideDrawerOpen: false,
+    screenWidth: 0,
     selectedNavId: null
   };
 
-  private selectNavItem = (navId: string) => {
+  private selectNavItem = (navId: string, hasChildren: boolean) => {
+    // don't collapse nav when clicked on if in mobile view (but collapse sub-nav if parent clicked)
+    if(!hasChildren && this.isMobile()) return;
     if (this.state.selectedNavId === navId) {
       // unset the navigation if null
       this.setState({ selectedNavId: null });
@@ -60,7 +80,7 @@ export class NavMenu extends React.Component<INavMenuProps, INavMenuState> {
   public render() {
     const showStyle = { display: "none" };
     return (
-      <nav ref={this.setWrapperRef}>
+      <nav ref={this.setNavRef}>
         <ul className="nav-list">
           <NavItem
             navId="home"
