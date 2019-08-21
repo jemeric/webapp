@@ -4,6 +4,7 @@ import { NavLink } from "react-router-dom";
 
 interface INavMenuProps {
   shouldCloseNavItem: (event: MouseEvent) => boolean;
+  isMobileNavOpen: boolean;
 }
 
 interface INavMenuState {
@@ -41,7 +42,6 @@ export class NavMenu extends React.Component<INavMenuProps, INavMenuState> {
   }
 
   private updateWindowDimensions() {
-    global.console.log("RESIZE WINDOW????");
     // TODO - setup global react hook for this?
     this.setState({ screenWidth: window.innerWidth });
   }
@@ -68,7 +68,7 @@ export class NavMenu extends React.Component<INavMenuProps, INavMenuState> {
 
   private selectNavItem = (navId: string, hasChildren: boolean) => {
     // don't collapse nav when clicked on if in mobile view (but collapse sub-nav if parent clicked)
-    if(!hasChildren && this.isMobile()) return;
+    if (!hasChildren && this.isMobile()) return;
     if (this.state.selectedNavId === navId) {
       // unset the navigation if null
       this.setState({ selectedNavId: null });
@@ -78,10 +78,11 @@ export class NavMenu extends React.Component<INavMenuProps, INavMenuState> {
   };
 
   public render() {
-    const showStyle = { display: "none" };
+    const showMobileNav = this.props.isMobileNavOpen ? { display: "block" } : { display: "none"};
+    global.console.log("Show Mobile Nav: ", showMobileNav, this.props.isMobileNavOpen);
     return (
       <nav ref={this.setNavRef}>
-        <ul className="nav-list">
+        <ul className="nav-list" style={showMobileNav}>
           <NavItem
             navId="home"
             navTitle="Home"

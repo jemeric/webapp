@@ -6,7 +6,7 @@ interface IToolbarProps {
 }
 
 interface IHeaderState {
-  sideDrawerOpen: boolean;
+  isMobileNavOpen: boolean;
 }
 
 export class Header extends React.Component<IToolbarProps, IHeaderState> {
@@ -14,7 +14,12 @@ export class Header extends React.Component<IToolbarProps, IHeaderState> {
   constructor(props: any) {
     super(props);
     this.shouldCloseNavItem = this.shouldCloseNavItem.bind(this);
+    this.toggleMobileNav = this.toggleMobileNav.bind(this);
   }
+
+  public state: IHeaderState = {
+    isMobileNavOpen: false
+  };
 
   private shouldCloseNavItem(event: MouseEvent): boolean {
     return (
@@ -23,12 +28,16 @@ export class Header extends React.Component<IToolbarProps, IHeaderState> {
     );
   }
 
+  private toggleMobileNav = () => {
+    this.setState({ isMobileNavOpen: !this.state.isMobileNavOpen });
+  };
+
   private setNavMobileToggleRef = (node: HTMLAnchorElement) => {
     this.navMobileToggleRef = node;
   };
 
   public render() {
-    const showStyle = { display: "none" };
+    const mobileClass = this.state.isMobileNavOpen ? "active" : "";
     return (
       <section className="navigation">
         <div className="nav-container">
@@ -36,11 +45,20 @@ export class Header extends React.Component<IToolbarProps, IHeaderState> {
             <a href="#!">Logo</a>
           </div>
           <div className="nav-mobile">
-            <a ref={this.setNavMobileToggleRef} id="nav-toggle" href="#!">
+            <a
+              ref={this.setNavMobileToggleRef}
+              onClick={this.toggleMobileNav}
+              id="nav-toggle"
+              className={mobileClass}
+              href="#!"
+            >
               <span />
             </a>
           </div>
-          <NavMenu shouldCloseNavItem={this.shouldCloseNavItem} />
+          <NavMenu
+            shouldCloseNavItem={this.shouldCloseNavItem}
+            isMobileNavOpen={this.state.isMobileNavOpen}
+          />
         </div>
       </section>
     );
