@@ -37,6 +37,13 @@ $link-hover-color: #2581dc;
   margin: 0 auto;
 }
 
+// Page content 
+main {
+  max-width: $content-width;
+  margin: 0 auto;
+  margin-top: 80px;
+}
+
 // Navigation
 nav {
   float: right;
@@ -100,11 +107,28 @@ nav {
   .nav-mobile {
     display: block;
   }
-  nav {
+  .navigation {
+    position: static;
+  }
+  .nav-top {
+    position: fixed;
     width: 100%;
+    background: $nav-background;
+    z-index: 100;
+    height: 70px;
+  }
+  nav {
     padding: $nav-height 0 15px;
+    height: 100vh;
+    position: absolute;
+    right: 0;
     ul {
       display: none;
+      position: relative;
+      margin-left: auto;
+      width: 400px;
+      background: #000;
+      height: 100%;
       li {
         float: none;
         a {
@@ -119,6 +143,9 @@ nav {
   }
   .nav-dropdown {
     position: static;
+  }
+  main {
+    margin-top: 0px;
   }
 }
 @media screen and (min-width: $breakpoint) {
@@ -166,9 +193,3 @@ nav {
   }
 }
 
-// Page content 
-main {
-  max-width: $content-width;
-  margin: 0 auto;
-  margin-top: 80px;
-}

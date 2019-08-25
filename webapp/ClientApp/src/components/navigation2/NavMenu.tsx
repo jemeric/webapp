@@ -117,6 +117,16 @@ export class NavMenu extends React.Component<INavMenuProps, INavMenuState> {
             <a href="#!">Web Design</a>
             <a href="#!">Web Developer</a>
           </NavItem>
+          <li>
+          <NavItem
+            navId="home"
+            navTitle="Home"
+            selectedNavId={this.state.selectedNavId}
+            selectNavItem={this.selectNavItem}
+          >
+            <a href="#!">Test</a>
+          </NavItem>
+          </li>
         </ul>
       </nav>
     );

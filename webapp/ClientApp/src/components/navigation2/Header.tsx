@@ -41,19 +41,21 @@ export class Header extends React.Component<IToolbarProps, IHeaderState> {
     return (
       <section className="navigation">
         <div className="nav-container">
-          <div className="brand">
-            <a href="#!">Logo</a>
-          </div>
-          <div className="nav-mobile">
-            <a
-              ref={this.setNavMobileToggleRef}
-              onClick={this.toggleMobileNav}
-              id="nav-toggle"
-              className={mobileClass}
-              href="#!"
-            >
-              <span />
-            </a>
+          <div className="nav-top">
+            <div className="brand">
+              <a href="#!">Logo</a>
+            </div>
+            <div className="nav-mobile">
+              <a
+                ref={this.setNavMobileToggleRef}
+                onClick={this.toggleMobileNav}
+                id="nav-toggle"
+                className={mobileClass}
+                href="#!"
+              >
+                <span />
+              </a>
+            </div>
           </div>
           <NavMenu
             shouldCloseNavItem={this.shouldCloseNavItem}

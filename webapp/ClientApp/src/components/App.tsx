@@ -53,10 +53,10 @@ export class App extends React.Component<IAppProps, IAppState> {
       backdrop = <Backdrop click={this.backdropClickHandler} />;
     }
     return (
-      <div style={{ height: "100%" }}>
+      <div>
         <Header drawerClickHandler={this.drawerToggleClickHandler} />
         {/*<Toolbar drawerClickHandler={this.drawerToggleClickHandler} />*/}
-        <SideDrawer show={this.state.sideDrawerOpen} />
+        {/*<SideDrawer show={this.state.sideDrawerOpen} />*/}
         {backdrop}
         <main>
           <Title>Styled Component</Title>
