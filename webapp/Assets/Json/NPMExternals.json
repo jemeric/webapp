@@ -15,7 +15,7 @@
         "assets": [
             {
                 "productionPath": "umd/react-dom.production.min.js",
-                "developmentPath": "umd/react-dom.production.min.js"
+                "developmentPath": "umd/react-dom.development.min.js"
             }
         ]
     }

@@ -5,7 +5,7 @@ import Backdrop from "./navigation/Backdrop/Backdrop";
 import Toolbar from "./navigation/Toolbar/Toolbar";
 import SideDrawer from "./navigation/SideDrawer/SideDrawer";
 import { Consumer } from "../auth-context";
-import { Header } from "./navigation2/Header";
+import { Layout } from "./navigation2/Layout";
 
 export interface IAppProps {
   compiler: string;
@@ -20,6 +20,7 @@ interface IAppState {
 const Title = styled.h1<any>`
   font-size: 1.5em;
   text-align: center;
+  margin-bottom: 1000px;
   color: palevioletred;
 `;
 
@@ -27,7 +28,6 @@ const HomePage = () => <div>Home Page</div>;
 const UsersPage = () => <div>Users Page</div>;
 
 export class App extends React.Component<IAppProps, IAppState> {
-
   constructor(props: any) {
     super(props);
   }
@@ -54,26 +54,26 @@ export class App extends React.Component<IAppProps, IAppState> {
     }
     return (
       <div>
-        <Header drawerClickHandler={this.drawerToggleClickHandler} />
-        {/*<Toolbar drawerClickHandler={this.drawerToggleClickHandler} />*/}
-        {/*<SideDrawer show={this.state.sideDrawerOpen} />*/}
-        {backdrop}
-        <main>
+        <Layout drawerClickHandler={this.drawerToggleClickHandler}>
           <Title>Styled Component</Title>
           <p>This is the page content!</p>
 
           <Consumer>
-            {auth => auth && (
-              auth.authenticated ? (
+            {auth =>
+              auth &&
+              (auth.authenticated ? (
                 <form method="POST" action="logout">
-                  <button className="btn btn-primary btn-login" style={{ margin: '10px' }}>
+                  <button
+                    className="btn btn-primary btn-login"
+                    style={{ margin: "10px" }}
+                  >
                     Logout {auth.user.role}
                   </button>
                 </form>
               ) : (
                 <div>Not Authenticated {auth.user.role}</div>
-              )
-            )}
+              ))
+            }
           </Consumer>
 
           {/* use switch for exclusive routing - just 1 match */}
@@ -81,7 +81,7 @@ export class App extends React.Component<IAppProps, IAppState> {
             <Route path="/" exact component={HomePage} />
             <Route path="/users" component={UsersPage} />
           </Switch>
-        </main>
+        </Layout>
       </div>
     );
   }

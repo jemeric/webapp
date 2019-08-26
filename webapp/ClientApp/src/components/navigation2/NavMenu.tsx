@@ -55,7 +55,8 @@ export class NavMenu extends React.Component<INavMenuProps, INavMenuState> {
     if (
       this.navRef &&
       !this.navRef.contains(event.target as any) &&
-      this.props.shouldCloseNavItem(event)
+      this.props.shouldCloseNavItem(event) &&
+      !this.isMobile()
     ) {
       this.setState({ selectedNavId: null });
     }
@@ -78,8 +79,14 @@ export class NavMenu extends React.Component<INavMenuProps, INavMenuState> {
   };
 
   public render() {
-    const showMobileNav = this.props.isMobileNavOpen ? { display: "block" } : { display: "none"};
-    global.console.log("Show Mobile Nav: ", showMobileNav, this.props.isMobileNavOpen);
+    const showMobileNav = this.props.isMobileNavOpen
+      ? { display: "block" }
+      : { display: "none" };
+    global.console.log(
+      "Show Mobile Nav: ",
+      showMobileNav,
+      this.props.isMobileNavOpen
+    );
     return (
       <nav ref={this.setNavRef}>
         <ul className="nav-list" style={showMobileNav}>
@@ -118,14 +125,14 @@ export class NavMenu extends React.Component<INavMenuProps, INavMenuState> {
             <a href="#!">Web Developer</a>
           </NavItem>
           <li>
-          <NavItem
-            navId="home"
-            navTitle="Home"
-            selectedNavId={this.state.selectedNavId}
-            selectNavItem={this.selectNavItem}
-          >
-            <a href="#!">Test</a>
-          </NavItem>
+            <NavItem
+              navId="home"
+              navTitle="Home"
+              selectedNavId={this.state.selectedNavId}
+              selectNavItem={this.selectNavItem}
+            >
+              <a href="#!">Test</a>
+            </NavItem>
           </li>
         </ul>
       </nav>

@@ -39,6 +39,7 @@ namespace webapp.Controllers
             }
 
             var context = authorizationService.GetAuthorizationContext();
+            var test = await Task.WhenAll(externalModulePaths);
             return View(new AppData(await Task.WhenAll(externalModulePaths), currentVersionTask.Result, context));
         }
     }
