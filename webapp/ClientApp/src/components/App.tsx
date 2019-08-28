@@ -24,6 +24,10 @@ const Title = styled.h1<any>`
   color: palevioletred;
 `;
 
+const Paragraph = styled.p<any>`
+  text-align: right;
+`;
+
 const HomePage = () => <div>Home Page</div>;
 const UsersPage = () => <div>Users Page</div>;
 
@@ -56,7 +60,7 @@ export class App extends React.Component<IAppProps, IAppState> {
       <div>
         <Layout drawerClickHandler={this.drawerToggleClickHandler}>
           <Title>Styled Component</Title>
-          <p>This is the page content!</p>
+          <Paragraph>This is the page content!</Paragraph>
 
           <Consumer>
             {auth =>

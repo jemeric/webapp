@@ -29,7 +29,7 @@ const resetScroll = (isMobileNavOpen: boolean, contentScrollPosition: number) =>
   if(isMobileNavOpen) {
     window.scrollTo(0, 0);
   } else {
-    global.console.log("RESET SCROLL CORRECTLY: ", contentScrollPosition);
+    // global.console.log("RESET SCROLL CORRECTLY: ", contentScrollPosition);
     window.scrollTo(0, contentScrollPosition);
   }
 }
@@ -38,22 +38,35 @@ function LayoutContainer(props: React.PropsWithChildren<ILayoutContainer>) {
   // const layoutRef = React.useRef<HTMLElement>(null);
   const [isMobileNavOpen, setIsMobileNavOpen] = React.useState(false);
   const [contentScrollPosition, setContentScrollPosition] = React.useState(0);
-  const onMobileToggle = React.useCallback(e => { 
+  const onMobileToggle = React.useCallback((e: boolean) => { 
+    global.console.log("Mobile Nave Callback", e);
     setIsMobileNavOpen(e); 
-    resetScroll(e, contentScrollPosition);
   }, []);
-
+  
   const scrollY = useScrollYPosition();
-  const contentScrollOffset = isMobileNavOpen ? { top: 70 - scrollY } : {};
+  const contentScrollOffset = isMobileNavOpen ? { top: 70 - contentScrollPosition } : {};
   const mobileNavContentClass = isMobileNavOpen ? "mobileNavOpened" : "";
   React.useEffect(() => {
+    // global.console.log("Last Scroll: ", scrollY);
     return () => {
-      global.console.log("SOMETHING CHANGED?????!!!!!?", scrollY);
-      if(!isMobileNavOpen) setContentScrollPosition(scrollY);
+      if(!isMobileNavOpen) {
+        // global.console.log("SOMETHING CHANGED?????!!!!!?", scrollY);
+        setContentScrollPosition(scrollY);
+      }
     };
   }, [scrollY]);
 
-  global.console.log("Is Mobile Nav Open: ", isMobileNavOpen);
+  React.useEffect(() => {
+    return () => {
+      global.console.log("Is Mobile Nav Open: ", isMobileNavOpen);
+      // global.console.log("Content Scroll Position: ", contentScrollPosition);
+      // shouldn't need to invert isMobileNavOpen but for some reason it always take the previous state at this point
+      resetScroll(!isMobileNavOpen, contentScrollPosition);
+    }
+  }, [isMobileNavOpen]);
+
+  // global.console.log("Is Mobile Nav Open: ", isMobileNavOpen);
+  // global.console.log("Is Mobile Nav Open: ", contentScrollPosition);
   return (
     <div>
       <Header mobileNavToggleHandler={onMobileToggle} />
