@@ -10,7 +10,6 @@ const resetScroll = (isMobileNavOpen: boolean, contentScrollPosition: number) =>
   if(isMobileNavOpen) {
     window.scrollTo(0, 0);
   } else {
-    // global.console.log("RESET SCROLL CORRECTLY: ", contentScrollPosition);
     window.scrollTo(0, contentScrollPosition);
   }
 }
@@ -19,10 +18,9 @@ export function Layout(props: React.PropsWithChildren<{}>) {
   // const layoutRef = React.useRef<HTMLElement>(null);
   const [isMobileNavOpen, setIsMobileNavOpen] = React.useState(false);
   const [contentScrollPosition, setContentScrollPosition] = React.useState(0);
-  const onMobileToggle = React.useCallback((e: boolean) => { 
-    global.console.log("Mobile Nave Callback", e);
-    setIsMobileNavOpen(e); 
-  }, []);
+  const onMobileToggle = (e: boolean) => { 
+    if(e !== isMobileNavOpen) setIsMobileNavOpen(e);
+  };
   
   const scrollY = useScrollYPosition();
   const contentScrollOffset = isMobileNavOpen ? { top: 70 - contentScrollPosition } : {};
