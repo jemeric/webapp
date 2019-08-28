@@ -6,25 +6,6 @@ export interface ILayoutProps {
   drawerClickHandler: () => void;
 }
 
-// export function Layout(props: ILayoutProps) {
-//   React.useEffect(() => {
-//     function
-//   });
-
-//   return (
-//     <div>
-//       <Header mobileNavToggleHandler={this.mobileNavToggleHandler} />
-//       <main style={contentScrollOffset} className={mobileNavContentClass}>
-//         {this.props.children}
-//       </main>
-//     </div>
-//   );
-// }
-
-interface ILayoutContainer {
-  test: string;
-}
-
 const resetScroll = (isMobileNavOpen: boolean, contentScrollPosition: number) => {
   if(isMobileNavOpen) {
     window.scrollTo(0, 0);
@@ -34,7 +15,7 @@ const resetScroll = (isMobileNavOpen: boolean, contentScrollPosition: number) =>
   }
 }
 
-function LayoutContainer(props: React.PropsWithChildren<ILayoutContainer>) {
+export function Layout(props: React.PropsWithChildren<{}>) {
   // const layoutRef = React.useRef<HTMLElement>(null);
   const [isMobileNavOpen, setIsMobileNavOpen] = React.useState(false);
   const [contentScrollPosition, setContentScrollPosition] = React.useState(0);
@@ -47,10 +28,9 @@ function LayoutContainer(props: React.PropsWithChildren<ILayoutContainer>) {
   const contentScrollOffset = isMobileNavOpen ? { top: 70 - contentScrollPosition } : {};
   const mobileNavContentClass = isMobileNavOpen ? "mobileNavOpened" : "";
   React.useEffect(() => {
-    // global.console.log("Last Scroll: ", scrollY);
     return () => {
       if(!isMobileNavOpen) {
-        // global.console.log("SOMETHING CHANGED?????!!!!!?", scrollY);
+        // store the most recent scroll state when the mobile nav was closed
         setContentScrollPosition(scrollY);
       }
     };
@@ -59,14 +39,13 @@ function LayoutContainer(props: React.PropsWithChildren<ILayoutContainer>) {
   React.useEffect(() => {
     return () => {
       global.console.log("Is Mobile Nav Open: ", isMobileNavOpen);
-      // global.console.log("Content Scroll Position: ", contentScrollPosition);
-      // shouldn't need to invert isMobileNavOpen but for some reason it always take the previous state at this point
+      global.console.log("Content Scroll Position: ", contentScrollPosition);
+      // both isMobileNavOpen and contentScrollPosition are getting the previously set values
+      // seems like a bug? Hacky work-around reverse isMobilenavOpen since that works
       resetScroll(!isMobileNavOpen, contentScrollPosition);
     }
   }, [isMobileNavOpen]);
 
-  // global.console.log("Is Mobile Nav Open: ", isMobileNavOpen);
-  // global.console.log("Is Mobile Nav Open: ", contentScrollPosition);
   return (
     <div>
       <Header mobileNavToggleHandler={onMobileToggle} />
@@ -75,38 +54,4 @@ function LayoutContainer(props: React.PropsWithChildren<ILayoutContainer>) {
       </main>
     </div>
   );
-}
-
-export class Layout extends React.Component<ILayoutProps> {
-  // private layoutRef : React.RefObject<HTMLElement> = React.useRef<HTMLElement>(null);
-  constructor(props: any) {
-    super(props);
-  }
-
-  // private mobileNavToggleHandler = (isMobileNavOpen: boolean) => {
-  //   this.setState({ isMobileNavOpen });
-  // };
-
-  // public state: ILayoutState = {
-  //   isMobileNavOpen: false,
-  //   scrollPosition: 0
-  // };
-
-  // private scrollListener = (scrollY: number) => {
-  //   // record the previous scroll state
-  //   if (!this.state.isMobileNavOpen) {
-  //     global.console.log("SCROLL Y FROM WITHIN: ", scrollY);
-  //     // this.setState({
-  //     //   scrollPosition: scrollY
-  //     // });
-  //   }
-  // };
-
-  public render() {
-    return (
-      <LayoutContainer test="string">
-        {this.props.children}
-      </LayoutContainer>
-    );
-  }
 }

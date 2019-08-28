@@ -40,12 +40,6 @@ export class App extends React.Component<IAppProps, IAppState> {
     sideDrawerOpen: false
   };
 
-  private drawerToggleClickHandler = () => {
-    this.setState(prevState => {
-      return { sideDrawerOpen: !prevState.sideDrawerOpen };
-    });
-  };
-
   private backdropClickHandler = () => {
     this.setState({ sideDrawerOpen: false });
   };
@@ -58,7 +52,7 @@ export class App extends React.Component<IAppProps, IAppState> {
     }
     return (
       <div>
-        <Layout drawerClickHandler={this.drawerToggleClickHandler}>
+        <Layout>
           <Title>Styled Component</Title>
           <Paragraph>This is the page content!</Paragraph>
 
