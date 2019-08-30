@@ -2,10 +2,6 @@ import * as React from "react";
 import { Header } from "./Header";
 import { useScrollYPosition } from "react-use-scroll-position";
 
-export interface ILayoutProps {
-  drawerClickHandler: () => void;
-}
-
 const resetScroll = (isMobileNavOpen: boolean, contentScrollPosition: number) => {
   if(isMobileNavOpen) {
     window.scrollTo(0, 0);
