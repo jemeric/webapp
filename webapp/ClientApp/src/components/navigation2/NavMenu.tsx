@@ -1,6 +1,7 @@
 import * as React from "react";
 import { NavItem } from "./NavItem";
 import { NavLink } from "react-router-dom";
+import { useWindowResize, useClickOutside } from "use-events";
 
 interface INavMenuProps {
   shouldCloseNavItem: (event: MouseEvent) => boolean;
@@ -13,6 +14,84 @@ interface INavMenuState {
 }
 
 const maxResponsiveWidth = 798;
+
+function isMobile(screenWidth: number): boolean {
+  return screenWidth <= maxResponsiveWidth;
+}
+
+function NavMenu2(props: INavMenuProps) {
+  const [screenWidth, screenHeight] = useWindowResize();
+  const [selectedNavId, setSelectedNavId] = React.useState<string | null>(null);
+  const navRef = React.useRef<HTMLElement>(null);
+  useClickOutside([navRef], event => {
+    // we also allow check with the parent (shouldCloseNavItem) to see if anything should block it there (e.g. toggling mobile nav)
+    if (props.shouldCloseNavItem(event) && isMobile(screenWidth)) {
+      setSelectedNavId(null);
+    }
+  });
+  const selectNavItem = (navId: string, hasChildren: boolean) => {
+    // don't collapse nav when clicked on if in mobile view (but collapse sub-nav if parent clicked)
+    if (!hasChildren && isMobile(screenWidth)) return;
+    if (selectedNavId === navId) {
+      // unset the navigation if null
+      setSelectedNavId(null);
+    } else {
+      setSelectedNavId(navId);
+    }
+  };
+
+  const showMobileNav = props.isMobileNavOpen
+    ? { display: "block" }
+    : { display: "none" };
+  return (
+    <nav ref={navRef}>
+      <ul className="nav-list" style={showMobileNav}>
+        <NavItem
+          navId="home"
+          navTitle="Home"
+          selectedNavId={selectedNavId}
+          selectNavItem={selectNavItem}
+        >
+          <a href="#!">Home</a>
+        </NavItem>
+        <NavItem
+          navId="about"
+          navTitle="About"
+          selectedNavId={selectedNavId}
+          selectNavItem={selectNavItem}
+        >
+          <a href="#!">About</a>
+        </NavItem>
+        <NavItem
+          navId="services"
+          navTitle="Services"
+          selectedNavId={selectedNavId}
+          selectNavItem={selectNavItem}
+        >
+          <a href="#!">Web Design</a>
+          <a href="#!">Web Developer</a>
+        </NavItem>
+        <NavItem
+          navId="portfolio"
+          navTitle="Portfolio"
+          selectedNavId={selectedNavId}
+          selectNavItem={selectNavItem}
+        >
+          <a href="#!">Web Design</a>
+          <a href="#!">Web Developer</a>
+        </NavItem>
+        <NavItem
+          navId="home"
+          navTitle="Home"
+          selectedNavId={selectedNavId}
+          selectNavItem={selectNavItem}
+        >
+          <a href="#!">Test</a>
+        </NavItem>
+      </ul>
+    </nav>
+  );
+}
 
 export class NavMenu extends React.Component<INavMenuProps, INavMenuState> {
   private navRef: HTMLElement | null = null;
@@ -124,16 +203,14 @@ export class NavMenu extends React.Component<INavMenuProps, INavMenuState> {
             <a href="#!">Web Design</a>
             <a href="#!">Web Developer</a>
           </NavItem>
-          <li>
-            <NavItem
-              navId="home"
-              navTitle="Home"
-              selectedNavId={this.state.selectedNavId}
-              selectNavItem={this.selectNavItem}
-            >
-              <a href="#!">Test</a>
-            </NavItem>
-          </li>
+          <NavItem
+            navId="home"
+            navTitle="Home"
+            selectedNavId={this.state.selectedNavId}
+            selectNavItem={this.selectNavItem}
+          >
+            <a href="#!">Test</a>
+          </NavItem>
         </ul>
       </nav>
     );
