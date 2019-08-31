@@ -22,22 +22,15 @@ export function Layout(props: React.PropsWithChildren<{}>) {
   const contentScrollOffset = isMobileNavOpen ? { top: 70 - contentScrollPosition } : {};
   const mobileNavContentClass = isMobileNavOpen ? "mobileNavOpened" : "";
   React.useEffect(() => {
-    return () => {
-      if(!isMobileNavOpen) {
-        // store the most recent scroll state when the mobile nav was closed
-        setContentScrollPosition(scrollY);
-      }
-    };
+    if(!isMobileNavOpen) {
+      // store the most recent scroll state when the mobile nav was closed
+      setContentScrollPosition(scrollY);
+    }
   }, [scrollY]);
 
   React.useEffect(() => {
-    return () => {
-      global.console.log("Is Mobile Nav Open: ", isMobileNavOpen);
-      global.console.log("Content Scroll Position: ", contentScrollPosition);
-      // both isMobileNavOpen and contentScrollPosition are getting the previously set values
-      // seems like a bug? Hacky work-around reverse isMobilenavOpen since that works
-      resetScroll(!isMobileNavOpen, contentScrollPosition);
-    }
+    resetScroll(isMobileNavOpen, contentScrollPosition);
+    // Note** if useEffect returns a function React will run it when it's time to cleanup
   }, [isMobileNavOpen]);
 
   return (
