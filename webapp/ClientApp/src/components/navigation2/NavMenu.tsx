@@ -3,34 +3,47 @@ import { NavItem } from "./NavItem";
 import { NavLink } from "react-router-dom";
 import { useClickOutside } from "use-events";
 
-
-// TODO - suggest as PR to make it safe for server-side rendering
-function getWindowDimensions() : [ number, number ] {
-  return isWindowDefined() ? [ window.innerWidth, window.innerHeight ] : [ 0, 0 ];
+// TODO - see https://github.com/sandiiarov/use-events/pull/167 (update and remove this if it gets accepted)
+function getWindowDimensions(
+  serverSideWidth: number,
+  serverSideHeight: number
+): [number, number] {
+  return isWindowDefined()
+    ? [window.innerWidth, window.innerHeight]
+    : [serverSideWidth, serverSideHeight];
 }
 
-function isWindowDefined() : boolean {
-  return typeof window !== 'undefined';
+function isWindowDefined(): boolean {
+  return typeof window !== "undefined";
 }
 
-const useWindowResize = (): [number, number] => {
-  const [winWidth, winHeight] = getWindowDimensions();
+const useWindowResize = (
+  serverSideWidth: number = 0,
+  serverSideHeight: number = 0
+): [number, number] => {
+  const [winWidth, winHeight] = getWindowDimensions(
+    serverSideWidth,
+    serverSideHeight
+  );
   const [width, setWidth] = React.useState(winWidth);
   const [height, setHeight] = React.useState(winHeight);
 
   React.useEffect(() => {
     const resize = () => {
-      const [newWinWidth, newWinHeight] = getWindowDimensions();
+      const [newWinWidth, newWinHeight] = getWindowDimensions(
+        serverSideWidth,
+        serverSideHeight
+      );
       setWidth(newWinWidth);
       setHeight(newWinHeight);
     };
 
-    if(isWindowDefined()) window.addEventListener('resize', resize);
+    if (isWindowDefined()) window.addEventListener("resize", resize);
 
     return () => {
-      if(isWindowDefined()) window.removeEventListener('resize', resize);
+      if (isWindowDefined()) window.removeEventListener("resize", resize);
     };
-  }, []);
+  }, [serverSideWidth, serverSideHeight]);
 
   return [width, height];
 };
@@ -56,13 +69,14 @@ export function NavMenu(props: INavMenuProps) {
   const [selectedNavId, setSelectedNavId] = React.useState<string | null>(null);
   const navRef = React.useRef<HTMLElement>(null);
 
-  useClickOutside([navRef], event => {
+  // use a callback here otherwise it will be re-run on each render and consequently might remove the listener before it can be re-added
+  const outerMouseClickHandler = React.useCallback(event => {
     // we also allow check with the parent (shouldCloseNavItem) to see if anything should block it there (e.g. toggling mobile nav)
-    global.console.log("CLICKED OUTSIDE:", event); // TODO - this only seems to be picked up on the second click when non-mobile nav menu is open
     if (props.shouldCloseNavItem(event) && !isMobile(screenWidth)) {
       setSelectedNavId(null);
     }
-  });
+  }, [navRef, screenWidth]);
+  useClickOutside([navRef], outerMouseClickHandler);
 
   const selectNavItem = (navId: string, hasChildren: boolean) => {
     // don't collapse nav when clicked on if in mobile view (but collapse sub-nav if parent clicked)
@@ -144,11 +158,13 @@ export function NavMenu(props: INavMenuProps) {
 //     this.updateWindowDimensions();
 //     window.addEventListener("resize", this.updateWindowDimensions);
 //     document.addEventListener("mousedown", this.handleClickOutside);
+//     global.console.log("ADD MOUSE LISTENER 1");
 //   }
 
 //   public componentWillUnmount() {
 //     window.removeEventListener("resize", this.updateWindowDimensions);
 //     document.removeEventListener("mousedown", this.handleClickOutside);
+//     global.console.log("REMOVE MOUSE LISTENER 1");
 //   }
 
 //   private isMobile(): boolean {

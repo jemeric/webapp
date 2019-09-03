@@ -16,12 +16,14 @@ export function Header(props: IHeaderProps) {
     props.mobileNavToggleHandler(isOpen);
   };
 
-  useClickOutside([headerRef], event => {
+  const outerMouseClickHandler = React.useCallback(event => {
     // close the mobile nav when clicked outside the header
     setIsMobileNavOpen(false);
     // we also allow check with the parent (shouldCloseNavItem) to see if anything should block it there (e.g. toggling mobile nav)
     props.mobileNavToggleHandler(false);
-  });
+  }, [headerRef, props.mobileNavToggleHandler]);
+
+  useClickOutside([headerRef], outerMouseClickHandler);
 
   const shouldCloseNavItem = (event: MouseEvent): boolean => {
     return (
