@@ -7,52 +7,38 @@ interface INavItemProps {
   selectNavItem: (navId: string, hasChildren: boolean) => void;
 }
 
-interface INavItemState {
-  subNavOpen: boolean;
-}
+export function NavItem(props: React.PropsWithChildren<INavItemProps>) {
+  const subNavItems = React.Children.map(props.children, child => {
+    return <li>{child}</li>;
+  });
 
-export class NavItem extends React.Component<INavItemProps, INavItemState> {
-  private wrapperRef: any;
-  constructor(props: any) {
-    super(props);
-    this.subNavClickHandler = this.subNavClickHandler.bind(this);
-  }
-
-  public state: INavItemState = {
-    subNavOpen: false
+  const navClickHandler = () => {
+    props.selectNavItem(props.navId, false);
   };
 
-  private navClickHandler = () => {
-    this.props.selectNavItem(this.props.navId, false);
+  const subNavClickHandler = () => {
+    props.selectNavItem(props.navId, true);
   };
 
-  private subNavClickHandler = () => {
-    this.props.selectNavItem(this.props.navId, true);
-  }
+  const isSubNavShown =
+    props.navId === props.selectedNavId
+      ? { display: "block" }
+      : { display: "none" };
 
-  public render() {
-    const subNavItems = React.Children.map(this.props.children, child => {
-      return <li>{child}</li>;
-    });
+  // Note react requires unique key to be set with array of child elements (e.g. see below)
+  const navItem =
+    subNavItems.length > 1
+      ? [
+          <a onClick={subNavClickHandler} key="1">
+            {props.navTitle}
+          </a>,
+          props.children && (
+            <ul className="nav-dropdown" style={isSubNavShown} key="2">
+              {subNavItems}
+            </ul>
+          )
+        ]
+      : props.children;
 
-    const isSubNavShown =
-      this.props.navId === this.props.selectedNavId
-        ? { display: "block" }
-        : { display: "none" };
-
-    // Note react requires unique key to be set with array of child elements (e.g. see below)
-    const navItem =
-      subNavItems.length > 1
-        ? [
-            <a onClick={this.subNavClickHandler} key="1">{this.props.navTitle}</a>,
-            this.props.children && (
-              <ul className="nav-dropdown" style={isSubNavShown} key="2">
-                {subNavItems}
-              </ul>
-            )
-          ]
-        : this.props.children;
-
-    return <li onClick={this.navClickHandler}>{navItem}</li>;
-  }
+  return <li onClick={navClickHandler}>{navItem}</li>;
 }
