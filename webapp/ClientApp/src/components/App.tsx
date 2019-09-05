@@ -1,11 +1,8 @@
 ﻿import * as React from "react";
 import { Route, Switch } from "react-router";
 import styled from "styled-components";
-import Backdrop from "./navigation/Backdrop/Backdrop";
-import Toolbar from "./navigation/Toolbar/Toolbar";
-import SideDrawer from "./navigation/SideDrawer/SideDrawer";
 import { Consumer } from "../auth-context";
-import { Layout } from "./navigation2/Layout";
+import { Layout } from "./navigation/Layout";
 
 export interface IAppProps {
   compiler: string;
@@ -31,56 +28,37 @@ const Paragraph = styled.p<any>`
 const HomePage = () => <div>Home Page</div>;
 const UsersPage = () => <div>Users Page</div>;
 
-export class App extends React.Component<IAppProps, IAppState> {
-  constructor(props: any) {
-    super(props);
-  }
+export function App(props: IAppProps) {
+  return (
+    <div>
+      <Layout>
+        <Title>Styled Component</Title>
+        <Paragraph>This is the page content!</Paragraph>
 
-  public state: IAppState = {
-    sideDrawerOpen: false
-  };
+        <Consumer>
+          {auth =>
+            auth &&
+            (auth.authenticated ? (
+              <form method="POST" action="logout">
+                <button
+                  className="btn btn-primary btn-login"
+                  style={{ margin: "10px" }}
+                >
+                  Logout {auth.user.role}
+                </button>
+              </form>
+            ) : (
+              <div>Not Authenticated {auth.user.role}</div>
+            ))
+          }
+        </Consumer>
 
-  private backdropClickHandler = () => {
-    this.setState({ sideDrawerOpen: false });
-  };
-
-  public render() {
-    let backdrop;
-
-    if (this.state.sideDrawerOpen) {
-      backdrop = <Backdrop click={this.backdropClickHandler} />;
-    }
-    return (
-      <div>
-        <Layout>
-          <Title>Styled Component</Title>
-          <Paragraph>This is the page content!</Paragraph>
-
-          <Consumer>
-            {auth =>
-              auth &&
-              (auth.authenticated ? (
-                <form method="POST" action="logout">
-                  <button
-                    className="btn btn-primary btn-login"
-                    style={{ margin: "10px" }}
-                  >
-                    Logout {auth.user.role}
-                  </button>
-                </form>
-              ) : (
-                <div>Not Authenticated {auth.user.role}</div>
-              ))
-            }
-          </Consumer>
-
-          {/* use switch for exclusive routing - just 1 match */}
-          <Switch>
-            <Route path="/" exact component={HomePage} />
-            <Route path="/users" component={UsersPage} />
-          </Switch>
-        </Layout>
-      </div>
-    );
-  }
+        {/* use switch for exclusive routing - just 1 match */}
+        <Switch>
+          <Route path="/" exact component={HomePage} />
+          <Route path="/users" component={UsersPage} />
+        </Switch>
+      </Layout>
+    </div>
+  );
 }

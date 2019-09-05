@@ -1,11 +1,7 @@
 ﻿/* @import "~bootstrap/scss/bootstrap"; */
 /* tilda points to the node modules folder */
 
-@import "./navigation/Backdrop/Backdrop.scss";
-@import "./navigation/SideDrawer/DrawerToggleButton.scss";
-@import "./navigation/SideDrawer/SideDrawer.scss";
-@import "./navigation/Toolbar/Toolbar.scss";
-@import "./navigation2/Header.scss";
+@import "./navigation/Header.scss";
 
 html {
     height: 100%;
