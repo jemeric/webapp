@@ -1,10 +1,28 @@
 import * as React from "react";
 import { NavMenu } from "./NavMenu";
 import { useClickOutside } from 'use-events';
+import styled from "styled-components";
 
 interface IHeaderProps {
   mobileNavToggleHandler: (isMobileNavOpen: boolean) => void;
 }
+
+interface INavigationContainerProps {
+  height: number;
+  background: string;
+}
+
+const Navigation = styled("section")<INavigationContainerProps>`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: ${props => props.height}px;
+  background: ${props => props.background};
+  @media only screen and (max-width: 798px) {
+    position: static;
+  }
+`;
 
 export function Header(props: IHeaderProps) {
   const [isMobileNavOpen, setIsMobileNavOpen] = React.useState(false);
@@ -34,7 +52,7 @@ export function Header(props: IHeaderProps) {
   const mobileClass = isMobileNavOpen ? "active" : "";
   
   return (
-    <section ref={headerRef} className="navigation">
+    <Navigation ref={headerRef} height={70} background={"#262626"}>
       <div className="nav-container">
         <div className="nav-top">
           <div className="brand">
@@ -57,6 +75,6 @@ export function Header(props: IHeaderProps) {
           isMobileNavOpen={isMobileNavOpen}
         />
       </div>
-    </section>
+    </Navigation>
   );
 }
