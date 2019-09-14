@@ -7,14 +7,14 @@ $nav-font-color: #ffffff;
 $link-hover-color: #2581dc;
 
 // Outer navigation wrapper
-.navigation {
+/* .navigation {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: $nav-height;
   background: $nav-background;
-}
+} */
 
 // Logo and branding
 .brand {
@@ -38,11 +38,11 @@ $link-hover-color: #2581dc;
 }
 
 // Page content 
-main {
+/* main {
   max-width: $content-width;
   margin: 0 auto;
   margin-top: 80px;
-}
+} */
 
 // Navigation
 nav {
@@ -107,9 +107,9 @@ nav {
   .nav-mobile {
     display: block;
   }
-  .navigation {
+  /* .navigation {
     position: static;
-  }
+  } */
   .nav-top {
     position: fixed;
     width: 100%;
@@ -145,14 +145,14 @@ nav {
   .nav-dropdown {
     position: static;
   }
-  main {
+ /* main {
     margin-top: 0px;
     &.mobileNavOpened {
       position: fixed;
       right: 400px; 
       width: 100vh;
     }
-  }
+  } */
 }
 @media screen and (min-width: $breakpoint) {
   .nav-list {
