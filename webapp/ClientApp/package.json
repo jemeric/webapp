@@ -47,7 +47,7 @@
     "bootstrap": "4.3.1",
     "clean-webpack-plugin": "2.0.1",
     "mini-css-extract-plugin": "0.4.3",
-    "node-sass": "4.9.3",
+    "node-sass": "4.13.1",
     "prettier": "1.16.0",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
